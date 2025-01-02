@@ -15,6 +15,7 @@ export default function useLogin() {
   const { setAccessToken } = useAccessTokenStore();
 
   const onChangeInput = (event) => {
+    console.log("로그인 input에 값을 입력할때마다 리랜더링이 발생함");
     setLogin((prevLogin) => {
       const newLogin = {
         ...prevLogin,
