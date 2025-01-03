@@ -1,4 +1,4 @@
-import { useAccessTokenStore } from "@/commons/stores/access-token-store";
+import { useAccessTokenStore } from "@/common/stores/access-token-store";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
 

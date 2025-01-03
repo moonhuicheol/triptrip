@@ -1,4 +1,4 @@
-import { LoginUserMutationVariables } from "@/commons/gql/graphql";
+import { LoginUserMutationVariables } from "@/common/gql/graphql";
 import { z } from "zod";
 
 export type LoginSchema = LoginUserMutationVariables;

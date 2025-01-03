@@ -1,64 +1,38 @@
 import { useMutation } from "@apollo/client";
-import { useEffect, useState } from "react";
-import { LOGIN_USER } from "./queries";
 import { useRouter } from "next/navigation";
-import { useAccessTokenStore } from "@/commons/stores/access-token-store";
+import { useAccessTokenStore } from "@/common/stores/access-token-store";
+import { LoginUserDocument } from "@/common/gql/graphql";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema, schema } from "./schema";
 
 export default function useLogin() {
   const router = useRouter();
-  const [login, setLogin] = useState({
-    email: "",
-    password: "",
-  });
-  const [errorMessage, setErrorMessage] = useState("visible");
-  const [loginUser] = useMutation(LOGIN_USER);
   const { setAccessToken } = useAccessTokenStore();
+  const methods = useForm<LoginSchema>({
+    resolver: zodResolver(schema),
+    mode: "onChange",
+  });
 
-  const onChangeInput = (event) => {
-    console.log("로그인 input에 값을 입력할때마다 리랜더링이 발생함");
-    setLogin((prevLogin) => {
-      const newLogin = {
-        ...prevLogin,
-        [event.target.name]: event.target.value,
-      };
-      return newLogin;
-    });
-  };
+  const [loginUser] = useMutation(LoginUserDocument);
 
-  useEffect(() => {
-    if (login.email !== "" && login.password !== "") {
-      setErrorMessage("hidden");
-    } else {
-      setErrorMessage("visible");
-    }
-  }, [login]);
-
-  const onClickLogin = async () => {
+  const onClickSubmit = async (data: LoginSchema) => {
     try {
       const result = await loginUser({
         variables: {
-          ...login,
+          email: data.email,
+          password: data.password,
         },
       });
-      console.log(result, "결과확인");
-      const accessToken = result.data?.loginUser.accessToken;
-      console.log(accessToken);
 
-      if (accessToken === undefined) {
-        alert("로그인에 실패했습니다! 다시 시도해 주세요!");
-        return;
-      }
+      const accessToken = result.data?.loginUser.accessToken;
       setAccessToken(accessToken);
 
       router.push("/boards");
     } catch (e) {
-      if (error instanceof Error) alert(error.message);
+      console.log(e);
     }
   };
 
-  return {
-    errorMessage,
-    onChangeInput,
-    onClickLogin,
-  };
+  return { methods, onClickSubmit };
 }

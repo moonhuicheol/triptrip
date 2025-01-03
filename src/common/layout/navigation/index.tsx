@@ -1,4 +1,4 @@
-import { useAccessTokenStore } from "@/commons/stores/access-token-store";
+import { useAccessTokenStore } from "@/common/stores/access-token-store";
 import { RightOutlined } from "@ant-design/icons";
 import { Tabs, TabsProps } from "antd";
 import Image from "next/image";

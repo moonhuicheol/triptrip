@@ -1,22 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import useLogin from "./hook";
-import { FormProvider, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema, schema } from "./schema";
+import { FormProvider } from "react-hook-form";
+import { LoginSchema } from "./schema";
 import FormInput from "@/common/ui/input";
 
-export default function Login() {
-  const { errorMessage, onChangeInput, onClickLogin } = useLogin();
-  const methods = useForm<LoginSchema>({
-    resolver: zodResolver(schema),
-    mode: "onChange",
-  });
+import useLogin from "./hook";
 
-  const onClickSubmit = async (data: LoginSchema) => {
-    console.log(data);
-  };
+export default function Login() {
+  const { methods, onClickSubmit } = useLogin();
 
   return (
     <FormProvider {...methods}>

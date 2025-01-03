@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Layout from "@/commons/layout";
-import ApolloHeaderAndErrorSettingRefresh from "@/commons/settings/apollo-header-error-refresh-setting";
+import Layout from "@/common/layout";
+import ApolloHeaderAndErrorSettingRefresh from "@/common/settings/apollo-header-error-refresh-setting";
 
 const NSN = localFont({
   src: "../../public/fonts/NanumSquareNeo-bRg.ttf",
