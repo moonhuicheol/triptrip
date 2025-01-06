@@ -2,16 +2,15 @@
 
 import { useQuery } from "@apollo/client";
 import { useParams, useRouter } from "next/navigation";
-import { FETCH_BOARD } from "./queries";
+import { FetchBoardDocument } from "@/common/gql/graphql";
 
 export default function useBoardDetail() {
   const router = useRouter();
   const params = useParams();
-  const { data } = useQuery(FETCH_BOARD, {
+  const { data } = useQuery(FetchBoardDocument, {
     variables: {
-      boardId: params.boardId,
+      boardId: String(params.boardId),
     },
-    fetchPolicy: "no-cache",
   });
 
   const onClickMoveEdit = () => {

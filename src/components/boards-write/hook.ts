@@ -5,26 +5,26 @@ import { useParams, useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import {
   CREATE_BOARD,
-  FETCH_BOARD,
   FETCH_BOARDS,
   UPDATE_BOARD,
   UPLOAD_FILE,
 } from "./queries";
 import { Address } from "react-daum-postcode";
+import { FetchBoardDocument } from "@/common/gql/graphql";
 
 export default function useBoardNew(props) {
   const params = useParams();
-  const { data } = useQuery(FETCH_BOARD, {
+  const { data } = useQuery(FetchBoardDocument, {
     variables: {
-      boardId: params.boardId,
+      boardId: String(params.boardId),
     },
   });
 
-  const [imageUrl, setImageUrl] = useState([
-    data?.fetchBoard.images[0] || "",
-    data?.fetchBoard.images[1] || "",
-    data?.fetchBoard.images[2] || "",
-  ]);
+  // const [imageUrl, setImageUrl] = useState([
+  //   data?.fetchBoard.images[0] || "",
+  //   data?.fetchBoard.images[1] || "",
+  //   data?.fetchBoard.images[2] || "",
+  // ]);
 
   const fileRef = useRef([null, null, null]);
   const router = useRouter();

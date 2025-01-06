@@ -33,7 +33,7 @@ export default function Boards({ data, refetch }) {
         {data?.fetchBoards.map((el, index) => (
           <div
             key={el._id}
-            className="flex items-center w-full py-3 pl-6 pr-0 gap-2 border border-solid border-[#F2F2F2] group"
+            className="flex items-center w-full py-3 pl-6 pr-0 gap-2 border border-solid border-[#F2F2F2] group cursor-pointer"
             onClick={() => onClickBoard(el._id)}
           >
             <div className="w-16 text-center font-light text-[14px] leading-5 text-[#919191]">

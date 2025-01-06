@@ -3,7 +3,6 @@
 import useBoardNew from "./hook";
 import { Modal } from "antd";
 import DaumPostcodeEmbed from "react-daum-postcode";
-import Image from "next/image";
 import { FormProvider, useForm } from "react-hook-form";
 import FormInput from "@/common/ui/input";
 import { IBoardWriteSchema, schema } from "./schema";
@@ -15,18 +14,12 @@ import { useParams, useRouter } from "next/navigation";
 export default function BoardNew(props) {
   const {
     data,
-    juso,
     isModalOpen,
-    fileRef,
-    imageUrl,
     onClickEditCancel,
     showModal,
     handleOk,
     handleCancel,
     handleComplete,
-    onChangeFile,
-    onClickImage,
-    onClickDeleteImage,
   } = useBoardNew(props);
 
   const params = useParams();
@@ -54,7 +47,6 @@ export default function BoardNew(props) {
         refetchQueries: [{ query: FetchBoardsDocument }],
       });
 
-      console.log("boardwrite 결과확인", result);
       router.push(`/boards/${result.data?.createBoard._id}`);
     } catch (e) {
       console.log("에러메시지", e);
@@ -77,6 +69,7 @@ export default function BoardNew(props) {
                   type="text"
                   keyname="writer"
                   placeholder="작성자 명을 입력해주세요."
+                  defaultValue={props.isEdit ? data?.fetchBoard.writer : ""}
                 />
                 <div className="font-medium text-4 leading-6 text-[#f66a6a]">
                   {methods.formState.errors.writer?.message}
@@ -107,6 +100,7 @@ export default function BoardNew(props) {
                 type="text"
                 keyname="title"
                 placeholder="제목을 입력해 주세요."
+                defaultValue={props.isEdit ? data?.fetchBoard.title : ""}
               />
               <div className="font-medium text-4 leading-6 text-[#f66a6a]">
                 {methods.formState.errors.title?.message}
@@ -122,6 +116,7 @@ export default function BoardNew(props) {
                 {...methods.register("contents")}
                 className="w-full rounded-lg border border-[#d4d3d3] py-3 px-4 h-[336px] resize-none"
                 placeholder="내용을 입력해 주세요."
+                defaultValue={props.isEdit ? data?.fetchBoard.contents : ""}
               ></textarea>
               <div className="font-medium text-4 leading-6 text-[#f66a6a]">
                 {methods.formState.errors.contents?.message}
@@ -132,13 +127,13 @@ export default function BoardNew(props) {
               <label>주소</label>
               <div className="w-[220px] flex gap-2">
                 <input
-                  className="w-[82px] rounded-lg border border-[#d4d3d3] py-3 px-4"
+                  className="w-[86px] rounded-lg border border-[#d4d3d3] py-3 px-4"
                   type="text"
                   placeholder="01234"
                   defaultValue={
                     props.isEdit
-                      ? data?.fetchBoard.boardAddress.zipcode
-                      : juso.zipcode
+                      ? data?.fetchBoard.boardAddress?.zipcode || ""
+                      : ""
                   }
                 />
                 <button
@@ -153,8 +148,8 @@ export default function BoardNew(props) {
                 type="text"
                 defaultValue={
                   props.isEdit
-                    ? data?.fetchBoard.boardAddress.address
-                    : juso.address
+                    ? data?.fetchBoard.boardAddress?.address || ""
+                    : ""
                 }
                 placeholder="주소를 입력해주세요."
               />
@@ -227,7 +222,7 @@ export default function BoardNew(props) {
               }`}
               disabled={!methods.formState.isValid}
             >
-              등록하기
+              {props.isEdit ? "수정하기" : "등록하기"}
             </button>
           </div>
           {isModalOpen && (

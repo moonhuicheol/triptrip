@@ -5,4 +5,5 @@ interface IFormInputProps<I> {
   placeholder?: string;
   type: HTMLInputTypeAttribute;
   keyname?: Path<I>;
+  defaultValue?: string | undefined | null;
 }

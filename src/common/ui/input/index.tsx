@@ -6,6 +6,7 @@ export default function FormInput<F extends FieldValues>({
   type,
   placeholder,
   keyname,
+  defaultValue,
 }: IFormInputProps<F>) {
   const { register } = useFormContext<F>();
   return (
@@ -14,6 +15,7 @@ export default function FormInput<F extends FieldValues>({
       type={type}
       placeholder={placeholder}
       {...register(keyname)}
+      defaultValue={defaultValue}
     />
   );
 }
