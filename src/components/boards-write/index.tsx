@@ -10,6 +10,7 @@ import { IBoardWriteSchema, schema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@apollo/client";
 import { CreateBoardDocument, FetchBoardsDocument } from "@/common/gql/graphql";
+import { useParams, useRouter } from "next/navigation";
 
 export default function BoardNew(props) {
   const {
@@ -28,6 +29,8 @@ export default function BoardNew(props) {
     onClickDeleteImage,
   } = useBoardNew(props);
 
+  const params = useParams();
+  const router = useRouter();
   const methods = useForm<IBoardWriteSchema>({
     resolver: zodResolver(schema),
     mode: "onChange",
@@ -50,7 +53,9 @@ export default function BoardNew(props) {
 
         refetchQueries: [{ query: FetchBoardsDocument }],
       });
+
       console.log("boardwrite 결과확인", result);
+      router.push(`/boards/${result.data?.createBoard._id}`);
     } catch (e) {
       console.log("에러메시지", e);
     }
