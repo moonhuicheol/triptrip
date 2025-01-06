@@ -1,181 +1,242 @@
 "use client";
 
-import styles from "./styles.module.css";
-import Input from "@/components/writeform/Input";
-import Textarea from "@/components/writeform/Textarea";
 import useBoardNew from "./hook";
 import { Modal } from "antd";
 import DaumPostcodeEmbed from "react-daum-postcode";
 import Image from "next/image";
+import { FormProvider, useForm } from "react-hook-form";
+import FormInput from "@/common/ui/input";
+import { IBoardWriteSchema, schema } from "./schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@apollo/client";
+import { CreateBoardDocument, FetchBoardsDocument } from "@/common/gql/graphql";
 
 export default function BoardNew(props) {
   const {
     data,
     juso,
-    registerCheck,
-    errorMessage,
     isModalOpen,
-    youtubeUrl,
     fileRef,
     imageUrl,
-    onChangeInput,
-    onClickRegister,
-    onClickEdit,
     onClickEditCancel,
     showModal,
     handleOk,
     handleCancel,
     handleComplete,
-    onChangeAddress,
-    onChangeYoutubeUrl,
     onChangeFile,
     onClickImage,
     onClickDeleteImage,
   } = useBoardNew(props);
 
+  const methods = useForm<IBoardWriteSchema>({
+    resolver: zodResolver(schema),
+    mode: "onChange",
+  });
+
+  const [createBoard] = useMutation(CreateBoardDocument);
+
+  const onClickSubmit = async (data: IBoardWriteSchema) => {
+    try {
+      const result = await createBoard({
+        variables: {
+          createBoardInput: {
+            writer: data.writer,
+            password: data.password,
+            contents: data.contents,
+            youtubeUrl: data.youtubeUrl,
+            title: data.title,
+          },
+        },
+
+        refetchQueries: [{ query: FetchBoardsDocument }],
+      });
+      console.log("boardwrite 결과확인", result);
+    } catch (e) {
+      console.log("에러메시지", e);
+    }
+  };
+
   return (
-    <div className="flex flex-col w-[1280px] gap-10 mx-auto my-0 px-0 py-10">
-      <div className="w-full font-bold text-xl leading-7">게시물 등록</div>
-      <div className="flex flex-col gap-10">
-        <div className="flex gap-10">
-          <Input
-            id="writer"
-            onChange={onChangeInput}
-            errorMessage={errorMessage.writer}
-            defaultValue={props.isEdit ? data?.fetchBoard.writer : ""}
-            disabled={props.isEdit ? true : false}
-          />
-          <Input
-            type="password"
-            id="password"
-            onChange={onChangeInput}
-            errorMessage={errorMessage.password}
-          />
-        </div>
-        <hr className={styles.hr} />
-        <Input
-          id="title"
-          onChange={onChangeInput}
-          errorMessage={errorMessage.title}
-          defaultValue={props.isEdit ? data?.fetchBoard.title : ""}
-        />
-        <hr className={styles.hr} />
-        <Textarea
-          id="contents"
-          onChange={onChangeInput}
-          errorMessage={errorMessage.contents}
-          defaultValue={props.isEdit ? data?.fetchBoard.contents : ""}
-        />
-        <div className={styles.address_box}>
-          <label>주소</label>
-          <div className={styles.address_search_box}>
-            <input
-              className={styles.addressNumber}
-              type="text"
-              placeholder="01234"
-              defaultValue={
-                props.isEdit
-                  ? data?.fetchBoard.boardAddress.zipcode
-                  : juso.zipcode
-              }
-            />
-            <button onClick={showModal}>우편번호 검색</button>
-          </div>
-          <input
-            type="text"
-            defaultValue={
-              props.isEdit
-                ? data?.fetchBoard.boardAddress.address
-                : juso.address
-            }
-            placeholder="주소를 입력해주세요."
-          />
-          <input
-            type="text"
-            onChange={onChangeAddress}
-            placeholder="상세주소"
-            defaultValue={
-              props.isEdit
-                ? data?.fetchBoard.boardAddress.addressDetail
-                : juso.addressDetail
-            }
-          />
-        </div>
-        <hr className={styles.hr} />
-        <div className={styles.youtube_box}>
-          <label>유튜브 링크</label>
-          <input
-            type="text"
-            placeholder="링크를 입력해 주세요."
-            name="youtubeUrl"
-            onChange={onChangeYoutubeUrl}
-            defaultValue={
-              props.isEdit ? data?.fetchBoard.youtubeUrl : youtubeUrl
-            }
-          />
-        </div>
-        <hr className={styles.hr} />
-        <div className={styles.photo_box}>
-          <label>사진첨부</label>
-          <div className="flex gap-4">
-            {[0, 1, 2].map((index) => (
-              <div
-                className="flex justify-center items-center w-40 h-40 rounded-lg gap-2 relative bg-[#f2f2f2]"
-                key={index}
-                onClick={() =>
-                  imageUrl[index]
-                    ? onClickDeleteImage(index)
-                    : onClickImage(index)
-                }
-              >
-                <input
-                  type="file"
-                  ref={(el) => (fileRef.current[index] = el)}
-                  onChange={(event) => onChangeFile(event, index)}
-                  style={{ display: "none" }}
-                  accept="image/jpeg,image/png"
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onClickSubmit)}>
+        <div className="flex flex-col w-[1280px] gap-10 mx-auto my-0 px-0 py-10">
+          <div className="w-full font-bold text-xl leading-7">게시물 등록</div>
+          <div className="flex flex-col gap-10">
+            <div className="flex gap-10">
+              <div className="w-1/2 flex flex-col gap-2">
+                <label className="font-medium text-4 leading-6" htmlFor="">
+                  작성자
+                </label>
+                <FormInput
+                  className="w-full rounded-lg border border-[#d4d3d3] py-3 px-4"
+                  type="text"
+                  keyname="writer"
+                  placeholder="작성자 명을 입력해주세요."
                 />
-                <Image
-                  src={
-                    imageUrl[index]
-                      ? `https://storage.googleapis.com/${imageUrl[index]}`
-                      : "/img/add.svg"
-                  }
-                  alt="img"
-                  fill
-                  objectFit="cover"
-                />
+                <div className="font-medium text-4 leading-6 text-[#f66a6a]">
+                  {methods.formState.errors.writer?.message}
+                </div>
               </div>
-            ))}
+              <div className="w-1/2 flex flex-col gap-2">
+                <label className="font-medium text-4 leading-6" htmlFor="">
+                  비밀번호
+                </label>
+                <FormInput
+                  className="w-full rounded-lg border border-[#d4d3d3] py-3 px-4"
+                  type="password"
+                  keyname="password"
+                  placeholder="비밀번호를 입력해 주세요."
+                />
+                <div className="font-medium text-4 leading-6 text-[#f66a6a]">
+                  {methods.formState.errors.password?.message}
+                </div>
+              </div>
+            </div>
+            <hr className="border border-[#e4e4e4]" />
+            <div className="flex flex-col gap-2">
+              <label className="font-medium text-4 leading-6" htmlFor="">
+                제목
+              </label>
+              <FormInput
+                className="w-full rounded-lg border border-[#d4d3d3] py-3 px-4"
+                type="text"
+                keyname="title"
+                placeholder="제목을 입력해 주세요."
+              />
+              <div className="font-medium text-4 leading-6 text-[#f66a6a]">
+                {methods.formState.errors.title?.message}
+              </div>
+            </div>
+
+            <hr className="border border-[#e4e4e4]" />
+            <div className="flex flex-col gap-2">
+              <label htmlFor="" className="font-medium text-4 leading-6">
+                내용
+              </label>
+              <textarea
+                {...methods.register("contents")}
+                className="w-full rounded-lg border border-[#d4d3d3] py-3 px-4 h-[336px] resize-none"
+                placeholder="내용을 입력해 주세요."
+              ></textarea>
+              <div className="font-medium text-4 leading-6 text-[#f66a6a]">
+                {methods.formState.errors.contents?.message}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label>주소</label>
+              <div className="w-[220px] flex gap-2">
+                <input
+                  className="w-[82px] rounded-lg border border-[#d4d3d3] py-3 px-4"
+                  type="text"
+                  placeholder="01234"
+                  defaultValue={
+                    props.isEdit
+                      ? data?.fetchBoard.boardAddress.zipcode
+                      : juso.zipcode
+                  }
+                />
+                <button
+                  className="text-nowrap h-12 rounded-lg border border-[#000000] py-3 px-4"
+                  onClick={showModal}
+                >
+                  우편번호 검색
+                </button>
+              </div>
+              <input
+                className="w-full rounded-lg border border-[#d4d3d3] py-3 px-4"
+                type="text"
+                defaultValue={
+                  props.isEdit
+                    ? data?.fetchBoard.boardAddress.address
+                    : juso.address
+                }
+                placeholder="주소를 입력해주세요."
+              />
+              <FormInput
+                className="w-full rounded-lg border border-[#d4d3d3] py-3 px-4"
+                type="text"
+                keyname="addressDetail"
+                placeholder="상세주소"
+              />
+            </div>
+            <hr className="border border-[#e4e4e4]" />
+            <div className="flex flex-col gap-2">
+              <label>유튜브 링크</label>
+              <FormInput
+                className="w-full rounded-lg border border-[#d4d3d3] py-3 px-4"
+                type="text"
+                keyname="youtubeUrl"
+                placeholder="링크를 입력해 주세요."
+              />
+            </div>
+            <hr className="border border-[#e4e4e4]" />
+            <div className="flex flex-col gap-2">
+              <label>사진첨부</label>
+              {/* <div className="flex gap-4">
+                {[0, 1, 2].map((index) => (
+                  <div
+                    className="flex justify-center items-center w-40 h-40 rounded-lg gap-2 relative bg-[#f2f2f2]"
+                    key={index}
+                    onClick={() =>
+                      imageUrl[index]
+                        ? onClickDeleteImage(index)
+                        : onClickImage(index)
+                    }
+                  >
+                    <input
+                      type="file"
+                      ref={(el) => (fileRef.current[index] = el)}
+                      onChange={(event) => onChangeFile(event, index)}
+                      style={{ display: "none" }}
+                      accept="image/jpeg,image/png"
+                    />
+                    <Image
+                      src={
+                        imageUrl[index]
+                          ? `https://storage.googleapis.com/${imageUrl[index]}`
+                          : "/img/add.svg"
+                      }
+                      alt="img"
+                      fill
+                      objectFit="cover"
+                    />
+                  </div>
+                ))}
+              </div> */}
+            </div>
           </div>
+          <div className="w-full flex justify-end gap-4">
+            <button
+              type="button"
+              className="h-12 rounded-lg border border-[#000000] py-3 px-4 font-semibold text-[18px] leading-6 text-center bg-[#ffffff]"
+              onClick={onClickEditCancel}
+            >
+              취소
+            </button>
+            <button
+              className={`h-12 rounded-lg py-3 px-4 ${
+                !methods.formState.isValid
+                  ? "bg-[#c7c7c7] text-[#e4e4e4]"
+                  : "bg-[#2974e5] text-[#ffffff]"
+              }`}
+              disabled={!methods.formState.isValid}
+            >
+              등록하기
+            </button>
+          </div>
+          {isModalOpen && (
+            <Modal
+              open={isModalOpen}
+              closable={false}
+              onOk={handleOk}
+              onCancel={handleCancel}
+            >
+              <DaumPostcodeEmbed onComplete={handleComplete} />
+            </Modal>
+          )}
         </div>
-      </div>
-      <div className={styles.footer}>
-        <button className={styles.board_new_button} onClick={onClickEditCancel}>
-          취소
-        </button>
-        <button
-          onClick={props.isEdit ? onClickEdit : onClickRegister}
-          className={
-            registerCheck === true
-              ? styles.board_new_button
-              : styles.board_new_button_register
-          }
-          disabled={registerCheck}
-        >
-          {props.isEdit ? "수정하기" : "등록하기"}
-        </button>
-      </div>
-      {isModalOpen && (
-        <Modal
-          open={isModalOpen}
-          closable={false}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
-          <DaumPostcodeEmbed onComplete={handleComplete} />
-        </Modal>
-      )}
-    </div>
+      </form>
+    </FormProvider>
   );
 }
