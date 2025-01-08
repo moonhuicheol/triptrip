@@ -2,16 +2,22 @@ import Image from "next/image";
 import useCommentWrite from "./hook";
 import { Rate } from "antd";
 import { StarOutlined } from "@ant-design/icons";
-import useCommentList from "../comment-list/hook";
+import FormInput from "@/common/ui/input";
+import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CreateBoardCommentInputSchema, schema } from "./schema";
 
 export default function CommentWrite({ isEdit, el, setIsEdit }) {
-  const {
-    onChangeInput,
-    onClickRegister,
-    onChangeRating,
-    onClickEdit,
-    comment,
-  } = useCommentWrite(setIsEdit);
+  const { onChangeRating, comment } = useCommentWrite(setIsEdit);
+
+  const methods = useForm<CreateBoardCommentInputSchema>({
+    resolver: zodResolver(schema),
+    mode: "onChange",
+  });
+
+  const onClickSubmit = (data) => {
+    console.log(data);
+  };
 
   return (
     <div className="flex flex-col w-[1280px] gap-10 mx-auto">
@@ -40,58 +46,63 @@ export default function CommentWrite({ isEdit, el, setIsEdit }) {
         <div>
           <Rate onChange={onChangeRating} />
         </div>
-        <div className="flex flex-col w-full gap-4">
-          <div className="flex w-full gap-4">
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor=""
-                className="font-medium text-4 leading-6 text-[#333333]"
-              >
-                작성자
-              </label>
-              <input
-                onChange={onChangeInput}
-                name="writer"
-                type="text"
-                className="py-3 px-4 border rounded-lg "
-                placeholder="작성자 명을 입력해 주세요."
-                defaultValue={isEdit && el.writer}
-                disabled={isEdit}
-              />
+
+        <FormProvider {...methods}>
+          <form
+            className="flex flex-col w-full gap-4"
+            onSubmit={methods.handleSubmit(onClickSubmit)}
+          >
+            <div className="flex w-full gap-4">
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor=""
+                  className="font-medium text-4 leading-6 text-[#333333]"
+                >
+                  작성자
+                </label>
+                <FormInput<CreateBoardCommentInputSchema>
+                  className="w-full rounded-lg border border-[#d4d3d3] py-3 px-4"
+                  type="text"
+                  keyname="writer"
+                  placeholder="작성자 명을 입력해주세요."
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor=""
+                  className="font-medium text-4 leading-6 text-[#333333]"
+                >
+                  비밀번호
+                </label>
+
+                <FormInput
+                  className="py-3 px-4 border rounded-lg"
+                  type="text"
+                  keyname="password"
+                  placeholder="비밀번호를 입력해 주세요."
+                />
+              </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor=""
-                className="font-medium text-4 leading-6 text-[#333333]"
+            <textarea
+              className="w-full h-[144px] gap-0 border px-4 py-3 rounded-lg border-solid border-[#D4D3D3] resize-none"
+              placeholder="댓글을 입력해 주세요."
+              defaultValue={isEdit ? el.contents : comment.contents}
+              {...methods.register("contents")}
+            ></textarea>
+            <div className="flex justify-end">
+              <button
+                className={`h-48px py-3 px-4 rounded-lg ${
+                  !methods.formState.isValid
+                    ? "text-[#e4e4e4] bg-[#c7c7c7c7]"
+                    : "bg-[#2974e5] text-[#ffffff]"
+                }`}
+                disabled={!methods.formState.isValid}
               >
-                비밀번호
-              </label>
-              <input
-                name="password"
-                onChange={onChangeInput}
-                type="password"
-                placeholder="비밀번호를 입력해 주세요."
-                className="py-3 px-4 border rounded-lg"
-              />
+                댓글등록
+              </button>
             </div>
-          </div>
-          <textarea
-            className="w-full h-[144px] gap-0 border px-4 py-3 rounded-lg border-solid border-[#D4D3D3] resize-none"
-            onChange={onChangeInput}
-            name="contents"
-            id=""
-            placeholder="댓글을 입력해 주세요."
-            defaultValue={isEdit ? el.contents : comment.contents}
-          ></textarea>
-          <div className="flex justify-end">
-            <button
-              onClick={isEdit ? () => onClickEdit(el._id) : onClickRegister}
-              className="h-48px py-3 px-4 rounded-lg bg-[#c7c7c7c7] text-[#e4e4e4]"
-            >
-              {!isEdit ? "댓글 등록" : "수정 하기"}
-            </button>
-          </div>
-        </div>
+          </form>
+        </FormProvider>
       </div>
     </div>
   );

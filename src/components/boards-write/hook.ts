@@ -228,7 +228,7 @@ export default function useBoardNew(props) {
     juso,
     youtubeUrl,
     fileRef,
-    imageUrl,
+    // imageUrl,
     onChangeInput,
     onClickRegister,
     onClickEdit,

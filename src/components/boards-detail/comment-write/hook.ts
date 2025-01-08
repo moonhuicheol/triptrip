@@ -1,14 +1,13 @@
 "use client";
 
 import { useMutation } from "@apollo/client";
-import {
-  CREATE_BOARD_COMMENT,
-  FETCH_BOARD_COMMENTS,
-  UPDATE_BOARD_COMMENT,
-} from "./queries";
+import { FETCH_BOARD_COMMENTS } from "./queries";
 import { ChangeEvent, useState } from "react";
 import { useParams } from "next/navigation";
-// import useCommentListItem from "../comment-list-item/hook";
+import {
+  CreateBoardCommentDocument,
+  UpdateBoardCommentDocument,
+} from "@/common/gql/graphql";
 
 export default function useCommentWrite(setIsEdit) {
   const params = useParams();
@@ -19,8 +18,8 @@ export default function useCommentWrite(setIsEdit) {
     rating: 3,
   });
 
-  const [createBoardComment] = useMutation(CREATE_BOARD_COMMENT);
-  const [updateBoardComment] = useMutation(UPDATE_BOARD_COMMENT);
+  const [createBoardComment] = useMutation(CreateBoardCommentDocument);
+  const [updateBoardComment] = useMutation(UpdateBoardCommentDocument);
 
   const onClickRegister = async () => {
     await createBoardComment({
