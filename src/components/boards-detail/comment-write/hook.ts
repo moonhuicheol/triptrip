@@ -11,12 +11,7 @@ import {
 
 export default function useCommentWrite(setIsEdit) {
   const params = useParams();
-  const [comment, setComment] = useState({
-    writer: "",
-    password: "",
-    contents: "",
-    rating: 3,
-  });
+  const [rating, setComment] = useState(3);
 
   const [createBoardComment] = useMutation(CreateBoardCommentDocument);
   const [updateBoardComment] = useMutation(UpdateBoardCommentDocument);
@@ -48,10 +43,7 @@ export default function useCommentWrite(setIsEdit) {
   };
 
   const onChangeRating = (rating) => {
-    setComment({
-      ...comment,
-      rating,
-    });
+    setComment(rating);
   };
 
   const onClickEdit = async (commentId) => {
@@ -78,7 +70,7 @@ export default function useCommentWrite(setIsEdit) {
   };
 
   return {
-    comment,
+    rating,
     onClickRegister,
     onChangeInput,
     onChangeRating,

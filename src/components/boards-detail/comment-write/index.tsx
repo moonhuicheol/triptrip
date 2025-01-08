@@ -6,17 +6,43 @@ import FormInput from "@/common/ui/input";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateBoardCommentInputSchema, schema } from "./schema";
+import {
+  CreateBoardCommentDocument,
+  FetchBoardCommentsDocument,
+} from "@/common/gql/graphql";
+import { useMutation } from "@apollo/client";
+import { useParams } from "next/navigation";
 
 export default function CommentWrite({ isEdit, el, setIsEdit }) {
-  const { onChangeRating, comment } = useCommentWrite(setIsEdit);
+  const { onChangeRating, rating } = useCommentWrite(setIsEdit);
+  const params = useParams();
+  const [createBoardComment] = useMutation(CreateBoardCommentDocument);
 
   const methods = useForm<CreateBoardCommentInputSchema>({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
 
-  const onClickSubmit = (data) => {
-    console.log(data);
+  const onClickSubmit = async (data: CreateBoardCommentInputSchema) => {
+    console.log("rating어케들어옴?", rating);
+    const result = await createBoardComment({
+      variables: {
+        createBoardCommentInput: {
+          writer: data.writer,
+          password: data.password,
+          contents: data.contents,
+          rating,
+        },
+        boardId: String(params.boardId),
+      },
+      refetchQueries: [
+        {
+          query: FetchBoardCommentsDocument,
+          variables: { baordId: params.boardId },
+        },
+      ],
+    });
+    console.log("result", result);
   };
 
   return (
@@ -86,7 +112,6 @@ export default function CommentWrite({ isEdit, el, setIsEdit }) {
             <textarea
               className="w-full h-[144px] gap-0 border px-4 py-3 rounded-lg border-solid border-[#D4D3D3] resize-none"
               placeholder="댓글을 입력해 주세요."
-              defaultValue={isEdit ? el.contents : comment.contents}
               {...methods.register("contents")}
             ></textarea>
             <div className="flex justify-end">
