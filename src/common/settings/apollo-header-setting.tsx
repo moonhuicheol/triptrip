@@ -15,12 +15,16 @@ const DEFAULT_CACHE = new InMemoryCache();
 interface IApolloSetting {
   children: React.ReactNode;
 }
-export default function ApolloHeaderSettingCacheTest(props: IApolloSetting) {
+export default function ApolloHeaderSettingLocalStorage(props: IApolloSetting) {
   const { accessToken } = useAccessTokenStore();
+
+  const localStorageAccessToken = localStorage.getItem("accessToken");
 
   const uploadLink = createUploadLink({
     uri: "http://main-practice.codebootcamp.co.kr/graphql",
-    headers: { Authorization: `Bearer ${accessToken}` },
+    headers: {
+      Authorization: `Bearer ${accessToken ?? localStorageAccessToken}`,
+    },
   });
 
   const client = new ApolloClient({

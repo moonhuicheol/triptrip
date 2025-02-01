@@ -20,12 +20,6 @@ export default function useBoardNew(props) {
     },
   });
 
-  // const [imageUrl, setImageUrl] = useState([
-  //   data?.fetchBoard.images[0] || "",
-  //   data?.fetchBoard.images[1] || "",
-  //   data?.fetchBoard.images[2] || "",
-  // ]);
-
   const fileRef = useRef([null, null, null]);
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -219,6 +213,10 @@ export default function useBoardNew(props) {
     deleteUrl[index] = "";
     setImageUrl(deleteUrl);
   };
+
+  useEffect(() => {
+    console.log("juso state updated:", juso);
+  }, [juso]);
 
   return {
     data,

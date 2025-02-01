@@ -26,7 +26,15 @@ export default function useLogin() {
       });
 
       const accessToken = result.data?.loginUser.accessToken;
+
+      if (accessToken === undefined) {
+        alert("로그인에 실패했습니다! 다시 시도해주세요!");
+        return;
+      }
+
       setAccessToken(accessToken);
+      localStorage.setItem("accessToken", accessToken);
+      //브라우저를 새로고침하면 토큰이 사라지기때문에 브라우저저장소 로컬스토리지에 저장해보기!
 
       router.push("/boards");
     } catch (e) {

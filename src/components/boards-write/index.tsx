@@ -9,10 +9,11 @@ import { IBoardWriteSchema, schema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@apollo/client";
 import { CreateBoardDocument, FetchBoardsDocument } from "@/common/gql/graphql";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function BoardNew(props) {
   const {
+    juso,
     data,
     isModalOpen,
     onClickEditCancel,
@@ -22,7 +23,6 @@ export default function BoardNew(props) {
     handleComplete,
   } = useBoardNew(props);
 
-  const params = useParams();
   const router = useRouter();
   const methods = useForm<IBoardWriteSchema>({
     resolver: zodResolver(schema),
@@ -32,6 +32,7 @@ export default function BoardNew(props) {
   const [createBoard] = useMutation(CreateBoardDocument);
 
   const onClickSubmit = async (data: IBoardWriteSchema) => {
+    console.log(data, "data확인");
     try {
       const result = await createBoard({
         variables: {
@@ -69,7 +70,6 @@ export default function BoardNew(props) {
                   type="text"
                   keyname="writer"
                   placeholder="작성자 명을 입력해주세요."
-                  defaultValue={props.isEdit ? data?.fetchBoard.writer : ""}
                 />
                 <div className="font-medium text-4 leading-6 text-[#f66a6a]">
                   {methods.formState.errors.writer?.message}
@@ -100,7 +100,6 @@ export default function BoardNew(props) {
                 type="text"
                 keyname="title"
                 placeholder="제목을 입력해 주세요."
-                defaultValue={props.isEdit ? data?.fetchBoard.title : ""}
               />
               <div className="font-medium text-4 leading-6 text-[#f66a6a]">
                 {methods.formState.errors.title?.message}
@@ -126,17 +125,23 @@ export default function BoardNew(props) {
             <div className="flex flex-col gap-2">
               <label>주소</label>
               <div className="w-[220px] flex gap-2">
-                <input
+                <FormInput
                   className="w-[86px] rounded-lg border border-[#d4d3d3] py-3 px-4"
                   type="text"
                   placeholder="01234"
-                  defaultValue={
-                    props.isEdit
-                      ? data?.fetchBoard.boardAddress?.zipcode || ""
-                      : ""
-                  }
+                  defaultValue={juso.zipcode}
+                  disabled={true}
+                  keyname="zipcode"
                 />
+                {/* <input
+                  className="w-[86px] rounded-lg border border-[#d4d3d3] py-3 px-4"
+                  type="text"
+                  placeholder="01234"
+                  defaultValue={juso.zipcode}
+                  disabled={true}
+                /> */}
                 <button
+                  type="button"
                   className="text-nowrap h-12 rounded-lg border border-[#000000] py-3 px-4"
                   onClick={showModal}
                 >
@@ -146,12 +151,9 @@ export default function BoardNew(props) {
               <input
                 className="w-full rounded-lg border border-[#d4d3d3] py-3 px-4"
                 type="text"
-                defaultValue={
-                  props.isEdit
-                    ? data?.fetchBoard.boardAddress?.address || ""
-                    : ""
-                }
+                defaultValue={juso.address}
                 placeholder="주소를 입력해주세요."
+                disabled={true}
               />
               <FormInput
                 className="w-full rounded-lg border border-[#d4d3d3] py-3 px-4"

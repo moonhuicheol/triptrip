@@ -13,5 +13,11 @@ export const schema: z.ZodType<IBoardWriteSchema> = z.object({
 
 export type IBoardWriteSchema = Pick<
   CreateBoardInput,
-  "title" | "writer" | "contents" | "boardAddress" | "password" | "youtubeUrl"
+  | "title"
+  | "writer"
+  | "contents"
+  | "boardAddress"
+  | "password"
+  | "youtubeUrl"
+  | "boardAddress"
 >;
