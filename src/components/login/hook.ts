@@ -33,7 +33,7 @@ export default function useLogin() {
       }
 
       setAccessToken(accessToken);
-      localStorage.setItem("accessToken", accessToken);
+      // localStorage.setItem("accessToken", accessToken); // 더이상 사용하지않음
       //브라우저를 새로고침하면 토큰이 사라지기때문에 브라우저저장소 로컬스토리지에 저장해보기!
 
       router.push("/boards");

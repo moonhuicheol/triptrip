@@ -38,10 +38,10 @@ export default function ApolloHeaderSettingLocalStorage(props: IApolloSetting) {
   // 3.useEffect방법 => next서버에서 안그려지고 브라우저에서 그려진다. useEffect는 브라우저랜더링후에 마지막으로 작동하기때문
   useEffect(() => {
     setAccessToken(localStorage.getItem("accessToken") ?? "");
-  });
+  }, []);
 
   const uploadLink = createUploadLink({
-    uri: "http://main-practice.codebootcamp.co.kr/graphql",
+    uri: "https://main-practice.codebootcamp.co.kr/graphql",
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

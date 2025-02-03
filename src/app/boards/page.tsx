@@ -1,5 +1,7 @@
 "use client";
 
+import { FetchBoardsDocument } from "@/common/gql/graphql";
+import { withLoginCheck } from "@/common/hocs/withLoginCheck";
 import Boards from "@/components/boards-list/list";
 import Search from "@/components/boards-list/search/page";
 import { gql, useQuery } from "@apollo/client";
@@ -15,8 +17,9 @@ const FETCH_BOARDS = gql`
   }
 `;
 
-export default function BoardsPage() {
-  const { data, refetch } = useQuery(FETCH_BOARDS);
+function BoardsPage() {
+  const { data, refetch } = useQuery(FetchBoardsDocument);
+
   return (
     <div>
       <Search data={data} refetch={refetch} />
@@ -24,3 +27,5 @@ export default function BoardsPage() {
     </div>
   );
 }
+
+export default withLoginCheck(BoardsPage);

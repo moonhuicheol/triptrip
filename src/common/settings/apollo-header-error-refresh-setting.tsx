@@ -11,9 +11,17 @@ import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 import { useAccessTokenStore } from "../stores/access-token-store";
 import { useEffect } from "react";
 import { onError } from "@apollo/client/link/error";
+import { gql, GraphQLClient } from "graphql-request";
 import { getAccessToken } from "../libraries/getAccessToken";
 import { useLoadStore } from "../stores/load-store";
 
+const RESTORE_ACCESS_TOKEN = gql`
+  mutation restoreAccessToken {
+    restoreAccessToken {
+      accessToken
+    }
+  }
+`;
 const DEFAULT_CACHE = new InMemoryCache();
 
 interface IApolloSetting {
