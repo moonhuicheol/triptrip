@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Layout from "@/common/layout";
-import ApolloHeaderSettingLocalStorage from "@/common/settings/apollo-header-setting";
+import ApolloHeaderAndErrorSettingRefresh from "@/common/settings/apollo-header-error-refresh-setting";
 
 const NSN = localFont({
   src: "../../public/fonts/NanumSquareNeo-bRg.ttf",
@@ -23,9 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${NSN.variable}`}>
-        <ApolloHeaderSettingLocalStorage>
+        <ApolloHeaderAndErrorSettingRefresh>
           <Layout>{children}</Layout>
-        </ApolloHeaderSettingLocalStorage>
+        </ApolloHeaderAndErrorSettingRefresh>
       </body>
     </html>
   );

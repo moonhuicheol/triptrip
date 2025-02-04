@@ -8,42 +8,27 @@ import {
   fromPromise,
 } from "@apollo/client";
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
-import { useAccessTokenStore } from "../stores/22-01-access-token-store";
 import { useEffect } from "react";
 import { onError } from "@apollo/client/link/error";
-
-import { getAccessToken } from "../libraries/26-01-get-access-token";
+import { useAccessTokenStore } from "../stores/access-token-store";
+import { gql, GraphQLClient } from "graphql-request";
 
 const GLOBAL_STATE = new InMemoryCache();
+
+const RESTORE_ACCESS_TOKEN = gql`
+  mutation restoreAccessToken {
+    restoreAccessToken {
+      accessToken
+    }
+  }
+`;
 
 interface IApolloSetting {
   children: React.ReactNode;
 }
+
 export default function ApolloHeaderAndErrorSetting(props: IApolloSetting) {
   const { accessToken, setAccessToken } = useAccessTokenStore();
-
-  // 1. 프리렌더링 예제 - process.browser 방법
-  // if (process.browser) {
-  //   console.log("나는 지금 브라우저다!!!");
-  // } else {
-  //   console.log(
-  //     "나는 지금 프론트엔드 서버다!!!(즉, yarn dev 프로그램 내부이다!!)"
-  //   );
-  // }
-
-  // 2. 프리렌더링 예제 - typeof window 방법
-  // if (typeof window !== "undefined") {
-  //   console.log("나는 지금 브라우저다!!!");
-  // } else {
-  //   console.log(
-  //     "나는 지금 프론트엔드 서버다!!!(즉, yarn dev 프로그램 내부이다!!)"
-  //   );
-  // }
-
-  // 3. 프리렌더링 무시 - useEffect 방법
-  // useEffect(() => {
-  //   setAccessToken(localStorage.getItem("accessToken") ?? "");
-  // }, []);
 
   const errorLink = onError(({ graphQLErrors, operation, forward }) => {
     // 1. 에러를 캐치
@@ -52,18 +37,25 @@ export default function ApolloHeaderAndErrorSetting(props: IApolloSetting) {
         // 1-2. 해당 에러가 토큰만료 에러인지 체크
         if (err.extensions?.code === "UNAUTHENTICATED") {
           // 2. refreshToken으로 accessToken 재발급 받기
-          return fromPromise(
-            getAccessToken().then((newAccessToken) => {
-              // 3. 재발급 받은 accessToken을 저장하고, 방금 실패한 쿼리의 정보 수정하고 재시도하기
-              setAccessToken(newAccessToken);
-              operation.setContext({
-                headers: {
-                  ...operation.getContext().headers, // Authorization: Bearer 만료된토큰
-                  Authorization: `Bearer ${newAccessToken}`, // 3-2. 토큰만 새걸로 바꿔치기
-                },
-              });
-            })
-          ).flatMap(() => forward(operation)); // 3-3. 바꿔치기된 API 재전송하기
+
+          const graphqlClient = new GraphQLClient(
+            "https://main-practice.codebootcamp.co.kr/graphql"
+          );
+          const result = await graphqlClient.request(RESTORE_ACCESS_TOKEN);
+          const newAcessToken = result.restoreAccessToken.accessToken;
+
+          // 3. 재발급 받은 accessToken으로 방금 시랲한 쿼리의 정보 수정하고 재시도 하기
+          setAccessToken(newAcessToken);
+
+          operation.setContext({
+            //기존의 헤더 정보를 새로운 어세스토큰으로 바꿔주기
+            headers: {
+              ...operation.getContext().headers, // 기존의 헤더 정보 그대로 가져오고
+              Authorization: `Bearer ${newAcessToken}`, //새 토큰 으로 바꿔주기
+            },
+          });
+
+          forward(operation); // 수정된 operation을 다시 시도  api재전송하기
         }
       }
     }
