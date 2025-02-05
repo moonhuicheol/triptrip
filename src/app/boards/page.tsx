@@ -2,24 +2,13 @@
 
 import { FetchBoardsDocument } from "@/common/gql/graphql";
 import { withLoginCheck } from "@/common/hocs/withLoginCheck";
-import Boards from "@/components/boards-list/list";
+import Boards from "@/components/boards-list/lists";
 import Search from "@/components/boards-list/search/page";
-import { gql, useQuery } from "@apollo/client";
-
-const FETCH_BOARDS = gql`
-  query fetchBoards($page: Int, $search: String) {
-    fetchBoards(page: $page, search: $search) {
-      _id
-      title
-      writer
-      createdAt
-    }
-  }
-`;
+import { useQuery } from "@apollo/client";
 
 function BoardsPage() {
   const { data, refetch } = useQuery(FetchBoardsDocument);
-
+  console.log(data, "게시글데이타");
   return (
     <div>
       <Search data={data} refetch={refetch} />

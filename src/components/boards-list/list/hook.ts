@@ -1,22 +1,13 @@
 "use client";
 
-import { useMutation, useQuery } from "@apollo/client";
+import { DeleteBoardDocument, FetchBoardsDocument } from "@/common/gql/graphql";
+import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import { DELETE_BOARD, FETCH_BOARDS, FETCH_BOARDS_COUNT } from "./queries";
-import { MouseEvent, useState } from "react";
-import useSearch from "../search/hook";
+import { MouseEvent } from "react";
 
-export default function useBoards({ data }) {
+export default function useList() {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
-  const { search } = useSearch({ data });
-  const { data: boardsCount } = useQuery(FETCH_BOARDS_COUNT, {
-    variables: {
-      search,
-    },
-  });
-
-  const [deleteBoard] = useMutation(DELETE_BOARD);
+  const [deleteBoard] = useMutation(DeleteBoardDocument);
 
   const onClickBoard = (boardId: string) => {
     router.push(`/boards/${boardId}`);
@@ -28,17 +19,9 @@ export default function useBoards({ data }) {
       variables: {
         boardId: event.currentTarget.id,
       },
-      refetchQueries: [{ query: FETCH_BOARDS }],
+      refetchQueries: [{ query: FetchBoardsDocument }],
     });
   };
 
-  return {
-    router,
-    data,
-    currentPage,
-    boardsCount,
-    onClickBoard,
-    onClickDeleteBoard,
-    setCurrentPage,
-  };
+  return { onClickBoard, onClickDeleteBoard };
 }
