@@ -3,7 +3,7 @@ import useList from "./hook";
 import { memo } from "react";
 import { ListProps } from "./types";
 
-export default function List({ el, index }: ListProps) {
+function List({ el, index }: ListProps) {
   const { onClickBoard, onClickDeleteBoard } = useList();
   return (
     <div
@@ -34,4 +34,4 @@ export default function List({ el, index }: ListProps) {
   );
 }
 
-// export default List;
+export default memo(List);
