@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>리플로우/리페인트</title>
+    <style>
+      .myreflow {
+        width: 100px;
+        height: 100px;
+        background-color: skyblue;
+
+        position: relative;
+        top: 0;
+        left: 0;
+      }
+
+      .myreflow:hover {
+        left: 20px; /* 레이아웃 변경: 요소가 이동하면서 리플로우 발생 */
+      }
+
+      .myrepaint {
+        width: 100px;
+        height: 100px;
+        background-color: yellow;
+        will-change: transform;
+      }
+
+      .myrepaint:hover {
+        transform: translateX(
+          20px
+        ); /* 레이아웃에는 영향을 주지 않고 리페인트 발생 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="myreflow">리플로우 이동(ex, 토글 등)</div>
+    <div class="myrepaint">리페인트 이동(ex, 토글 등)</div>
+  </body>
+</html>

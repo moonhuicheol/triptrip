@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>리플로우/리페인트</title>
+    <style>
+      .myreflow {
+        width: 100px;
+        height: 100px;
+        background-color: skyblue;
+      }
+
+      /* 크키가 커지면서 커진부위도 색상을 칠해야하므로 리플로우와 리페인트가 일어난다. */
+      .myreflow:hover {
+        width: 110px;
+        height: 110px;
+      }
+
+      .myrepaint {
+        width: 100px;
+        height: 100px;
+        background-color: yellow;
+      }
+
+      /* 리페인트만 한다. */
+      .myrepaint:hover {
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="myreflow">리플로우 연습!</div>
+    <div class="myrepaint">리페인트 연습!</div>
+  </body>
+</html>

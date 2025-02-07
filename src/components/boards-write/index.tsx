@@ -175,6 +175,9 @@ export default function BoardNew(props) {
             <hr className="border border-[#e4e4e4]" />
             <div className="flex flex-col gap-2">
               <label>사진첨부</label>
+              <div className="flex gap-4">
+                <div className="w-40 h-40 rounded-lg bg-[#f2f2f2]"></div>
+              </div>
               {/* <div className="flex gap-4">
                 {[0, 1, 2].map((index) => (
                   <div
