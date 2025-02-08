@@ -178,7 +178,7 @@ export default function BoardNew(props) {
               <div className="flex gap-4">
                 <div className="w-40 h-40 rounded-lg bg-[#f2f2f2]"></div>
               </div>
-              {/* <div className="flex gap-4">
+              <div className="flex gap-4">
                 {[0, 1, 2].map((index) => (
                   <div
                     className="flex justify-center items-center w-40 h-40 rounded-lg gap-2 relative bg-[#f2f2f2]"
@@ -208,7 +208,7 @@ export default function BoardNew(props) {
                     />
                   </div>
                 ))}
-              </div> */}
+              </div>
             </div>
           </div>
           <div className="w-full flex justify-end gap-4">
