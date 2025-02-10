@@ -13,6 +13,11 @@ const CREATE_BOARD = gql`
         address
         addressDetail
       }
+      images
+      likeCount
+      dislikeCount
+      user
+      createdAt
     }
   }
 `;

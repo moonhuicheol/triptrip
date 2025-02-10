@@ -3,14 +3,16 @@
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { useParams, useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import {
-  CREATE_BOARD,
-  FETCH_BOARDS,
-  UPDATE_BOARD,
-  UPLOAD_FILE,
-} from "./queries";
+import { FETCH_BOARDS } from "./queries";
 import { Address } from "react-daum-postcode";
-import { FetchBoardDocument } from "@/common/gql/graphql";
+import {
+  CreateBoardDocument,
+  FetchBoardDocument,
+  FetchBoardsDocument,
+  UpdateBoardDocument,
+  UploadFileDocument,
+} from "@/common/gql/graphql";
+import { IBoardWriteSchema } from "./schema";
 
 export default function useBoardNew(props) {
   const params = useParams();
@@ -20,7 +22,7 @@ export default function useBoardNew(props) {
     },
   });
 
-  const fileRef = useRef([null, null, null]);
+  const fileRef = useRef();
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [youtubeUrl, setYoutubUrl] = useState("");
@@ -49,10 +51,11 @@ export default function useBoardNew(props) {
     contents: "visible",
   });
 
+  const [imgUrl, setImgUrl] = useState<string[]>([]);
   const [registerCheck, setRegisterCheck] = useState(true);
-  const [createBoard] = useMutation(CREATE_BOARD);
-  const [updateBoard] = useMutation(UPDATE_BOARD);
-  const [uploadFile] = useMutation(UPLOAD_FILE);
+  const [createBoard] = useMutation(CreateBoardDocument);
+  const [updateBoard] = useMutation(UpdateBoardDocument);
+  const [uploadFile] = useMutation(UploadFileDocument);
 
   const onChangeYoutubeUrl = (event: ChangeEvent<HTMLInputElement>) => {
     setYoutubUrl(event.target.value);
@@ -74,38 +77,63 @@ export default function useBoardNew(props) {
     if (!Object.values(input).every((el) => el === "")) setRegisterCheck(false);
   };
 
-  const onClickRegister = async () => {
+  const onClickSubmit = async (data: IBoardWriteSchema) => {
+    console.log(data, "data확인");
     try {
       const result = await createBoard({
         variables: {
           createBoardInput: {
-            ...input,
-            youtubeUrl,
+            writer: data.writer,
+            password: data.password,
+            contents: data.contents,
+            youtubeUrl: data.youtubeUrl,
+            title: data.title,
             boardAddress: {
               ...juso,
             },
-            images: imageUrl,
+            images: imgUrl,
           },
-
-          refetchQueries: [{ query: FETCH_BOARDS }],
         },
+        refetchQueries: [{ query: FetchBoardsDocument }],
       });
-      router.push(`/boards/${result.data.createBoard._id}`);
-    } catch (error) {
-      let errorMessage;
-
-      if (error instanceof ApolloError) {
-        if (error.graphQLErrors && error.graphQLErrors.length > 0) {
-          errorMessage = error.graphQLErrors[0].message;
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
-      } else if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      console.log("에러메시지", errorMessage);
+      console.log("게시글 작성 결가", result);
+      router.push(`/boards/${result.data?.createBoard._id}`);
+    } catch (e) {
+      console.log("에러메시지", e);
     }
   };
+  // const onClickRegister = async () => {
+  //   try {
+  //     const result = await createBoard({
+  //       variables: {
+  //         createBoardInput: {
+  //           ...input,
+  //           youtubeUrl,
+  //           boardAddress: {
+  //             ...juso,
+  //           },
+  //           images: imgUrl,
+  //         },
+  //       },
+  //       refetchQueries: [{ query: FetchBoardsDocument }],
+  //     });
+  //     console.log(result, "게시글 등록 결과");
+  //     router.push(`/boards/${result.data?.createBoard._id}`);
+  //   } catch (error) {
+  //     let errorMessage;
+
+  //     if (error instanceof ApolloError) {
+  //       if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+  //         errorMessage = error.graphQLErrors[0].message;
+  //       } else if (error.message) {
+  //         errorMessage = error.message;
+  //       }
+  //     } else if (error instanceof Error) {
+  //       errorMessage = error.message;
+  //     }
+  //     console.log("에러메시지", errorMessage);
+  //   }
+  // };
 
   const onClickEdit = async () => {
     try {
@@ -194,29 +222,34 @@ export default function useBoardNew(props) {
     });
   };
 
-  const onChangeFile = async (event, index) => {
-    const file = event.target.files?.[0];
-    const result = await uploadFile({ variables: { file } });
-    const newImageUrl = result.data.uploadFile.url;
+  const onChangeFile = async (event) => {
+    const file = event?.target.files[0];
+    console.log(file, "파일");
+    console.log(event.target.files, "파일즈");
 
-    const updatedUrls = [...imageUrl];
-    updatedUrls[index] = newImageUrl;
-    setImageUrl(updatedUrls);
+    const result = await uploadFile({
+      variables: {
+        file,
+      },
+    });
+
+    console.log(result.data?.uploadFile.url, "결과");
+    setImgUrl([result.data?.uploadFile.url ?? ""]);
   };
 
-  const onClickImage = (index: number) => {
-    fileRef.current[index].click();
+  const onClickImage = () => {
+    fileRef.current.click();
   };
 
-  const onClickDeleteImage = (index) => {
-    const deleteUrl = [...imageUrl];
-    deleteUrl[index] = "";
-    setImageUrl(deleteUrl);
-  };
+  // const onClickDeleteImage = (index) => {
+  //   const deleteUrl = [...imageUrl];
+  //   deleteUrl[index] = "";
+  //   setImageUrl(deleteUrl);
+  // };
 
-  useEffect(() => {
-    console.log("juso state updated:", juso);
-  }, [juso]);
+  // useEffect(() => {
+  //   console.log("juso state updated:", juso);
+  // }, [juso]);
 
   return {
     data,
@@ -228,7 +261,7 @@ export default function useBoardNew(props) {
     fileRef,
     // imageUrl,
     onChangeInput,
-    onClickRegister,
+    onClickSubmit,
     onClickEdit,
     onClickEditCancel,
     showModal,
@@ -239,6 +272,6 @@ export default function useBoardNew(props) {
     onChangeYoutubeUrl,
     onChangeFile,
     onClickImage,
-    onClickDeleteImage,
+    // onClickDeleteImage,
   };
 }

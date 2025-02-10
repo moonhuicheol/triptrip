@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@apollo/client";
 import { CreateBoardDocument, FetchBoardsDocument } from "@/common/gql/graphql";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function BoardNew(props) {
   const {
@@ -21,38 +22,16 @@ export default function BoardNew(props) {
     handleOk,
     handleCancel,
     handleComplete,
+    onChangeFile,
+    onClickImage,
+    onClickSubmit,
+    fileRef,
   } = useBoardNew(props);
 
-  const router = useRouter();
   const methods = useForm<IBoardWriteSchema>({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
-
-  const [createBoard] = useMutation(CreateBoardDocument);
-
-  const onClickSubmit = async (data: IBoardWriteSchema) => {
-    console.log(data, "data확인");
-    try {
-      const result = await createBoard({
-        variables: {
-          createBoardInput: {
-            writer: data.writer,
-            password: data.password,
-            contents: data.contents,
-            youtubeUrl: data.youtubeUrl,
-            title: data.title,
-          },
-        },
-
-        refetchQueries: [{ query: FetchBoardsDocument }],
-      });
-
-      router.push(`/boards/${result.data?.createBoard._id}`);
-    } catch (e) {
-      console.log("에러메시지", e);
-    }
-  };
 
   return (
     <FormProvider {...methods}>
@@ -175,39 +154,23 @@ export default function BoardNew(props) {
             <hr className="border border-[#e4e4e4]" />
             <div className="flex flex-col gap-2">
               <label>사진첨부</label>
-              <div className="flex gap-4">
-                <div className="w-40 h-40 rounded-lg bg-[#f2f2f2]"></div>
-              </div>
-              <div className="flex gap-4">
-                {[0, 1, 2].map((index) => (
-                  <div
-                    className="flex justify-center items-center w-40 h-40 rounded-lg gap-2 relative bg-[#f2f2f2]"
-                    key={index}
-                    onClick={() =>
-                      imageUrl[index]
-                        ? onClickDeleteImage(index)
-                        : onClickImage(index)
-                    }
-                  >
-                    <input
-                      type="file"
-                      ref={(el) => (fileRef.current[index] = el)}
-                      onChange={(event) => onChangeFile(event, index)}
-                      style={{ display: "none" }}
-                      accept="image/jpeg,image/png"
-                    />
-                    <Image
-                      src={
-                        imageUrl[index]
-                          ? `https://storage.googleapis.com/${imageUrl[index]}`
-                          : "/img/add.svg"
-                      }
-                      alt="img"
-                      fill
-                      objectFit="cover"
-                    />
+              <div className="flex gap-4" onClick={onClickImage}>
+                <div className="w-40 h-40 rounded-lg bg-[#f2f2f2] flex justify-center items-center hover:cursor-pointer">
+                  <div className="flex flex-col gap-2 items-center">
+                    <div className="w-10 h-10 relative">
+                      <Image src="/img/add.svg" alt="addImg" fill />
+                    </div>
+                    <div className="font-normal text-base text-[#777777]">
+                      클릭해서 사진 업로드
+                    </div>
                   </div>
-                ))}
+                </div>
+                <input
+                  type="file"
+                  onChange={onChangeFile}
+                  className="hidden"
+                  ref={fileRef}
+                />
               </div>
             </div>
           </div>
