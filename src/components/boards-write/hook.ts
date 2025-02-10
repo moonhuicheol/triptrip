@@ -224,9 +224,6 @@ export default function useBoardNew(props) {
 
   const onChangeFile = async (event) => {
     const file = event?.target.files[0];
-    console.log(file, "파일");
-    console.log(event.target.files, "파일즈");
-
     const result = await uploadFile({
       variables: {
         file,
@@ -272,6 +269,7 @@ export default function useBoardNew(props) {
     onChangeYoutubeUrl,
     onChangeFile,
     onClickImage,
+    imgUrl,
     // onClickDeleteImage,
   };
 }

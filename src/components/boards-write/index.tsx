@@ -23,6 +23,7 @@ export default function BoardNew(props) {
     onClickImage,
     onClickSubmit,
     fileRef,
+    imgUrl,
   } = useBoardNew(props);
 
   const methods = useForm<IBoardWriteSchema>({
@@ -152,16 +153,27 @@ export default function BoardNew(props) {
             <div className="flex flex-col gap-2">
               <label>사진첨부</label>
               <div className="flex gap-4" onClick={onClickImage}>
-                <div className="w-40 h-40 rounded-lg bg-[#f2f2f2] flex justify-center items-center hover:cursor-pointer">
-                  <div className="flex flex-col gap-2 items-center">
-                    <div className="w-10 h-10 relative">
-                      <Image src="/img/add.svg" alt="addImg" fill />
-                    </div>
-                    <div className="font-normal text-base text-[#777777]">
-                      클릭해서 사진 업로드
+                {!imgUrl[0] ? (
+                  <div className="w-40 h-40 rounded-lg bg-[#f2f2f2] flex justify-center items-center hover:cursor-pointer">
+                    <div className="flex flex-col gap-2 items-center">
+                      <div className="w-10 h-10 relative">
+                        <Image src="/img/add.svg" alt="addImg" fill />
+                      </div>
+                      <div className="font-normal text-base text-[#777777]">
+                        클릭해서 사진 업로드
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="w-40 h-40 relative hover:cursor-pointer">
+                    <Image
+                      src={`https://storage.googleapis.com/${imgUrl[0]}`}
+                      alt=""
+                      fill
+                      objectFit="cover"
+                    />
+                  </div>
+                )}
                 <input
                   type="file"
                   onChange={onChangeFile}
