@@ -13,6 +13,8 @@ export default function useBoardDetail() {
     },
   });
 
+  console.log(data, "패치 데이터");
+
   const onClickMoveEdit = () => {
     router.push(`/boards/${params.boardId}/edit`);
   };

@@ -7,9 +7,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import FormInput from "@/common/ui/input";
 import { IBoardWriteSchema, schema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@apollo/client";
-import { CreateBoardDocument, FetchBoardsDocument } from "@/common/gql/graphql";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 export default function BoardNew(props) {

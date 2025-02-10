@@ -36,7 +36,6 @@ export default function BoardDetail() {
         <div className="flex justify-end w-full">
           <div className="flex gap-2">
             <Image
-              // sizes="100vw"
               width={0}
               height={0}
               src="/img/link.svg"
@@ -57,17 +56,14 @@ export default function BoardDetail() {
           </div>
         </div>
       </div>
-      {data?.fetchBoard.images.some((el) => el !== "") &&
-        data?.fetchBoard.images.map((el, index) => (
-          <div className="w-[500px] h-[500px] relative" key={index}>
-            <Image
-              src={`https://storage.googleapis.com/${el}`}
-              alt=""
-              fill
-              objectFit="cover"
-            />
-          </div>
-        ))}
+      <div className="w-[500px] h-[500px] relative">
+        <Image
+          src={`https://storage.googleapis.com/${data?.fetchBoard.images[0]}`}
+          alt=""
+          fill
+          objectFit="cover"
+        />
+      </div>
       <div className="font-normal text-[16px] leading-6">
         {data?.fetchBoard.contents}
       </div>
