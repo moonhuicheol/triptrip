@@ -52,6 +52,7 @@ export default function useBoardNew(props) {
   });
 
   const [imgUrl, setImgUrl] = useState<string[]>([]);
+  const [temporaryUrl, setTemporaryUrl] = useState<string[]>([]);
   const [registerCheck, setRegisterCheck] = useState(true);
   const [createBoard] = useMutation(CreateBoardDocument);
   const [updateBoard] = useMutation(UpdateBoardDocument);
@@ -224,6 +225,9 @@ export default function useBoardNew(props) {
 
   const onChangeFile = async (event) => {
     const file = event?.target.files[0];
+    const fakeUrl = URL.createObjectURL(file);
+    setTemporaryUrl([fakeUrl]);
+
     const result = await uploadFile({
       variables: {
         file,
@@ -270,6 +274,7 @@ export default function useBoardNew(props) {
     onChangeFile,
     onClickImage,
     imgUrl,
+    temporaryUrl,
     // onClickDeleteImage,
   };
 }

@@ -24,6 +24,7 @@ export default function BoardNew(props) {
     onClickSubmit,
     fileRef,
     imgUrl,
+    temporaryUrl,
   } = useBoardNew(props);
 
   const methods = useForm<IBoardWriteSchema>({
@@ -153,7 +154,7 @@ export default function BoardNew(props) {
             <div className="flex flex-col gap-2">
               <label>사진첨부</label>
               <div className="flex gap-4" onClick={onClickImage}>
-                {!imgUrl[0] ? (
+                {!temporaryUrl[0] ? (
                   <div className="w-40 h-40 rounded-lg bg-[#f2f2f2] flex justify-center items-center hover:cursor-pointer">
                     <div className="flex flex-col gap-2 items-center">
                       <div className="w-10 h-10 relative">
@@ -166,12 +167,7 @@ export default function BoardNew(props) {
                   </div>
                 ) : (
                   <div className="w-40 h-40 relative hover:cursor-pointer">
-                    <Image
-                      src={`https://storage.googleapis.com/${imgUrl[0]}`}
-                      alt=""
-                      fill
-                      objectFit="cover"
-                    />
+                    <Image src={temporaryUrl[0]} alt="" fill />
                   </div>
                 )}
                 <input
