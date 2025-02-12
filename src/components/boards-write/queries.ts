@@ -16,27 +16,10 @@ const CREATE_BOARD = gql`
       images
       likeCount
       dislikeCount
-      user
-      createdAt
-    }
-  }
-`;
-
-const FETCH_BOARD = gql`
-  query fetchBoard($boardId: ID!) {
-    fetchBoard(boardId: $boardId) {
-      _id
-      writer
-      title
-      contents
-      createdAt
-      youtubeUrl
-      boardAddress {
-        zipcode
-        address
-        addressDetail
+      user {
+        _id
       }
-      images
+      createdAt
     }
   }
 `;
@@ -79,4 +62,4 @@ const UPLOAD_FILE = gql`
   }
 `;
 
-export { CREATE_BOARD, FETCH_BOARD, FETCH_BOARDS, UPDATE_BOARD, UPLOAD_FILE };
+export { CREATE_BOARD, FETCH_BOARDS, UPDATE_BOARD, UPLOAD_FILE };

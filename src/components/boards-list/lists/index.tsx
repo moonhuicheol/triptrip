@@ -5,6 +5,8 @@ import PageButton from "../pagination";
 import List from "../list";
 import { BoardsProps } from "./types";
 import React, { useState } from "react";
+import { useApolloClient } from "@apollo/client";
+import { FetchBoardDocument } from "@/common/gql/graphql";
 
 export default function Boards({ data, refetch }: BoardsProps) {
   const { currentPage, boardsCount, setCurrentPage } = useBoards({ data });
@@ -13,6 +15,17 @@ export default function Boards({ data, refetch }: BoardsProps) {
     setTest("제목 변경");
   };
 
+  const client = useApolloClient();
+
+  const prefetchBoardDebounce = _.debounce(()=>{
+
+  }, 200)
+  const prefetchBoard = (boardId) = () => {
+    client.query({
+      query: FetchBoardDocument,
+      variables: { boardId },
+    });
+  });
   return (
     <div className="w-[1280px] mx-auto min-w-[680px] px-12 py-6 rounded-2xl shadow-[0px_0px_20px_0px_#00000014] mb-[100px]">
       <div className="flex flex-col iw-full gap-2">

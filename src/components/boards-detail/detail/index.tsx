@@ -7,8 +7,14 @@ import { Tooltip } from "antd";
 import YouTube from "react-youtube";
 
 export default function BoardDetail() {
-  const { data, onClickMoveEdit, onClickMoveBoards, youtubeOpts } =
-    useBoardDetail();
+  const {
+    data,
+    onClickMoveEdit,
+    onClickMoveBoards,
+    youtubeOpts,
+    onClickLike,
+    onClickDislike,
+  } = useBoardDetail();
 
   return (
     <div className="flex flex-col w-[1280px] gap-4 mx-auto my-0 py-10">
@@ -79,15 +85,15 @@ export default function BoardDetail() {
       <div className="flex justify-center gap-6">
         <div className="flex flex-col gap-1">
           <div className="w-6 h-6 relative">
-            <DislikeOutlined />
+            <DislikeOutlined onClick={onClickDislike} />
           </div>
-          <div>24</div>
+          <div>{data?.fetchBoard.dislikeCount}</div>
         </div>
         <div className="flex flex-col gap-1">
           <div className="w-6 h-6 relative">
-            <LikeOutlined />
+            <LikeOutlined onClick={onClickLike} />
           </div>
-          <div>24</div>
+          <div>{data?.fetchBoard.likeCount}</div>
         </div>
       </div>
       <div className="flex justify-center w-full gap-6">

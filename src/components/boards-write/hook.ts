@@ -3,7 +3,6 @@
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { useParams, useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { FETCH_BOARDS } from "./queries";
 import { Address } from "react-daum-postcode";
 import {
   CreateBoardDocument,
@@ -140,7 +139,7 @@ export default function useBoardNew(props) {
     try {
       await updateBoard({
         variables: {
-          boardId: params.boardId,
+          boardId: String(params.boardId),
           password: input.password,
           updateBoardInput: {
             title: input.title,
@@ -149,10 +148,10 @@ export default function useBoardNew(props) {
             boardAddress: {
               ...juso,
             },
-            images: imageUrl,
+            images: imgUrl,
           },
-          refetchQueries: [{ query: FETCH_BOARDS }],
         },
+        refetchQueries: [{ query: FetchBoardDocument }],
       });
 
       router.push(`/boards/${params.boardId}`);

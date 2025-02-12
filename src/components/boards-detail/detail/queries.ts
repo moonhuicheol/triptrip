@@ -7,16 +7,34 @@ const FETCH_BOARD = gql`
       writer
       title
       contents
-      createdAt
       youtubeUrl
+      likeCount
+      dislikeCount
+      images
       boardAddress {
         zipcode
         address
         addressDetail
+        _id
       }
-      images
+      createdAt
+      user {
+        picture
+        deletedAt
+      }
     }
   }
 `;
 
-export { FETCH_BOARD };
+const LIKE_BOARD = gql`
+  mutation likeBoard($boardId: ID!) {
+    likeBoard(boardId: $boardId)
+  }
+`;
+
+const DISLIKE_BOARD = gql`
+  mutation dislikeBoard($boardId: ID!) {
+    dislikeBoard(boardId: $boardId)
+  }
+`;
+export { FETCH_BOARD, LIKE_BOARD, DISLIKE_BOARD };
