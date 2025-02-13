@@ -1,10 +1,11 @@
 import useCommentList from "./hook";
 import InfiniteScroll from "react-infinite-scroll-component";
 import CommentListItem from "../comment-list-item";
+import { FixedSizeList as Scroll } from "react-window";
 
 export default function CommentList() {
   const { data, hasMore, onNext } = useCommentList();
-
+  const outerDiv = (props) => <div id="scrollId" {...props} />;
   return (
     <div className="w-[1280px] mx-auto">
       {data?.fetchBoardComments.length > 0 ? (
@@ -14,11 +15,20 @@ export default function CommentList() {
           dataLength={data?.fetchBoardComments.length ?? 0}
           loader=""
         >
-          <div className="flex flex-col gap-10">
-            {data?.fetchBoardComments.map((el) => (
-              <CommentListItem el={el} key={el._id} />
-            ))}
-          </div>
+          <Scroll
+            height={500}
+            width={"100%"}
+            itemSize={90}
+            itemData={data?.fetchBoardComments}
+            itemCount={data?.fetchBoardComments.length}
+            outerElementType={outerDiv}
+          >
+            {({ index, data }) => (
+              <div className="flex flex-col gap-10">
+                <CommentListItem el={data[index]} key={data[index]._id} />
+              </div>
+            )}
+          </Scroll>
         </InfiniteScroll>
       ) : (
         <div className="flex justify-center">
