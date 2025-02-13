@@ -8,7 +8,7 @@ import { useQuery } from "@apollo/client";
 
 function BoardsPage() {
   const { data, refetch } = useQuery(FetchBoardsDocument);
-  console.log(data, "게시글데이타");
+
   return (
     <div>
       <Search data={data} refetch={refetch} />

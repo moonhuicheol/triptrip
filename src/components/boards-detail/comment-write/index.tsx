@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import useCommentWrite from "./hook";
 import { Rate } from "antd";
@@ -6,17 +8,9 @@ import FormInput from "@/common/ui/input";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateBoardCommentInputSchema, schema } from "./schema";
-import {
-  CreateBoardCommentDocument,
-  FetchBoardCommentsDocument,
-} from "@/common/gql/graphql";
-import { useMutation } from "@apollo/client";
-import { useParams } from "next/navigation";
 
-export default function CommentWrite({ isEdit, el, setIsEdit }) {
-  const { onChangeRating, rating, onClickSubmit } = useCommentWrite();
-  const params = useParams();
-  const [createBoardComment] = useMutation(CreateBoardCommentDocument);
+export default function CommentWrite({ isEdit }) {
+  const { setRating, rating, onClickSubmit } = useCommentWrite();
 
   const methods = useForm<CreateBoardCommentInputSchema>({
     resolver: zodResolver(schema),
@@ -48,7 +42,7 @@ export default function CommentWrite({ isEdit, el, setIsEdit }) {
         )}
 
         <div>
-          <Rate onChange={onChangeRating} />
+          <Rate onChange={setRating} value={rating} />
         </div>
 
         <FormProvider {...methods}>
@@ -81,7 +75,7 @@ export default function CommentWrite({ isEdit, el, setIsEdit }) {
 
                 <FormInput
                   className="py-3 px-4 border rounded-lg"
-                  type="text"
+                  type="password"
                   keyname="password"
                   placeholder="비밀번호를 입력해 주세요."
                 />

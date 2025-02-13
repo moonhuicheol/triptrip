@@ -2,7 +2,7 @@
 
 import { useMutation } from "@apollo/client";
 import { FETCH_BOARD_COMMENTS } from "./queries";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import {
   CreateBoardCommentDocument,
@@ -13,14 +13,7 @@ import { CreateBoardCommentInputSchema } from "./schema";
 
 export default function useCommentWrite() {
   const params = useParams();
-  const [comment, setComment] = useState({
-    writer: "",
-    password: "",
-    contents: "",
-    rating: 0,
-  });
-
-  // const [rating, setComment] = useState(3);
+  const [rating, setRating] = useState(3);
 
   const [createBoardComment] = useMutation(CreateBoardCommentDocument);
   const [updateBoardComment] = useMutation(UpdateBoardCommentDocument);
@@ -32,20 +25,20 @@ export default function useCommentWrite() {
           writer: data.writer,
           password: data.password,
           contents: data.contents,
-          rating: 0,
+          rating,
         },
         boardId: String(params.boardId),
       },
       refetchQueries: [
         {
           query: FetchBoardCommentsDocument,
-          variables: { baordId: params.boardId },
+          variables: { boardId: params.boardId },
         },
       ],
     });
+
     console.log("result", result);
   };
-  const onChangeRating = (rating) => {};
 
   const onClickEdit = async (commentId) => {
     await updateBoardComment({
@@ -67,13 +60,13 @@ export default function useCommentWrite() {
       ],
     });
     // onCancelEdit();
-    setIsEdit(false);
+    // setIsEdit(false);
   };
 
   return {
     onClickSubmit,
-    onChangeInput,
-    onChangeRating,
+    rating,
+    setRating,
     onClickEdit,
   };
 }

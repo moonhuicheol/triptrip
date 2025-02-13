@@ -4,6 +4,7 @@ import CommentListItem from "../comment-list-item";
 
 export default function CommentList() {
   const { data, hasMore, onNext } = useCommentList();
+
   return (
     <div className="w-[1280px] mx-auto">
       {data?.fetchBoardComments.length > 0 ? (
