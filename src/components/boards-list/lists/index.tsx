@@ -7,6 +7,7 @@ import { BoardsProps } from "./types";
 import React, { useState } from "react";
 import { useApolloClient } from "@apollo/client";
 import { FetchBoardDocument } from "@/common/gql/graphql";
+import _ from "lodash";
 
 export default function Boards({ data, refetch }: BoardsProps) {
   const { currentPage, boardsCount, setCurrentPage } = useBoards({ data });
@@ -17,15 +18,17 @@ export default function Boards({ data, refetch }: BoardsProps) {
 
   const client = useApolloClient();
 
-  const prefetchBoardDebounce = _.debounce(()=>{
-
-  }, 200)
-  const prefetchBoard = (boardId) = () => {
+  const prefetchBoardDebounce = _.debounce((boardId) => {
     client.query({
       query: FetchBoardDocument,
       variables: { boardId },
     });
-  });
+  }, 200);
+
+  const prefetchBoard = (boardId: string) => async () => {
+    prefetchBoardDebounce(boardId);
+  };
+
   return (
     <div className="w-[1280px] mx-auto min-w-[680px] px-12 py-6 rounded-2xl shadow-[0px_0px_20px_0px_#00000014] mb-[100px]">
       <div className="flex flex-col iw-full gap-2">
@@ -49,7 +52,7 @@ export default function Boards({ data, refetch }: BoardsProps) {
         </div>
         {data?.fetchBoards.map((el, index) => (
           <React.Fragment key={el._id}>
-            <List el={el} index={index} />
+            <List el={el} index={index} onMouseOver={prefetchBoard(el._id)} />
           </React.Fragment>
         ))}
         <PageButton

@@ -14,7 +14,7 @@ import { useMutation } from "@apollo/client";
 import { useParams } from "next/navigation";
 
 export default function CommentWrite({ isEdit, el, setIsEdit }) {
-  const { onChangeRating, rating } = useCommentWrite(setIsEdit);
+  const { onChangeRating, rating, onClickSubmit } = useCommentWrite();
   const params = useParams();
   const [createBoardComment] = useMutation(CreateBoardCommentDocument);
 
@@ -22,28 +22,6 @@ export default function CommentWrite({ isEdit, el, setIsEdit }) {
     resolver: zodResolver(schema),
     mode: "onChange",
   });
-
-  const onClickSubmit = async (data: CreateBoardCommentInputSchema) => {
-    console.log("rating어케들어옴?", rating);
-    const result = await createBoardComment({
-      variables: {
-        createBoardCommentInput: {
-          writer: data.writer,
-          password: data.password,
-          contents: data.contents,
-          rating,
-        },
-        boardId: String(params.boardId),
-      },
-      refetchQueries: [
-        {
-          query: FetchBoardCommentsDocument,
-          variables: { baordId: params.boardId },
-        },
-      ],
-    });
-    console.log("result", result);
-  };
 
   return (
     <div className="flex flex-col w-[1280px] gap-10 mx-auto">

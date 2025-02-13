@@ -76,10 +76,10 @@ export default function BoardDetail() {
       <div className="flex justify-center items-center bg-[#f2f2f2] py-6">
         <div className="w-[822px] h-[464px]">
           {" "}
-          <YouTube
+          {/* <YouTube
             videoId={data?.fetchBoard.youtubeUrl?.split("=")[1]}
             opts={youtubeOpts}
-          />
+          /> */}
         </div>
       </div>
       <div className="flex justify-center gap-6">

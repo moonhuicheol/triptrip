@@ -6,45 +6,46 @@ import { ChangeEvent, useState } from "react";
 import { useParams } from "next/navigation";
 import {
   CreateBoardCommentDocument,
+  FetchBoardCommentsDocument,
   UpdateBoardCommentDocument,
 } from "@/common/gql/graphql";
+import { CreateBoardCommentInputSchema } from "./schema";
 
-export default function useCommentWrite(setIsEdit) {
+export default function useCommentWrite() {
   const params = useParams();
-  const [rating, setComment] = useState(3);
+  const [comment, setComment] = useState({
+    writer: "",
+    password: "",
+    contents: "",
+    rating: 0,
+  });
+
+  // const [rating, setComment] = useState(3);
 
   const [createBoardComment] = useMutation(CreateBoardCommentDocument);
   const [updateBoardComment] = useMutation(UpdateBoardCommentDocument);
 
-  const onClickRegister = async () => {
-    await createBoardComment({
+  const onClickSubmit = async (data: CreateBoardCommentInputSchema) => {
+    const result = await createBoardComment({
       variables: {
         createBoardCommentInput: {
-          ...comment,
+          writer: data.writer,
+          password: data.password,
+          contents: data.contents,
+          rating: 0,
         },
-        boardId: params.boardId,
+        boardId: String(params.boardId),
       },
       refetchQueries: [
         {
-          query: FETCH_BOARD_COMMENTS,
-          variables: { boardId: params.boardId },
+          query: FetchBoardCommentsDocument,
+          variables: { baordId: params.boardId },
         },
       ],
     });
+    console.log("result", result);
   };
-
-  const onChangeInput = (
-    event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setComment({
-      ...comment,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const onChangeRating = (rating) => {
-    setComment(rating);
-  };
+  const onChangeRating = (rating) => {};
 
   const onClickEdit = async (commentId) => {
     await updateBoardComment({
@@ -70,8 +71,7 @@ export default function useCommentWrite(setIsEdit) {
   };
 
   return {
-    rating,
-    onClickRegister,
+    onClickSubmit,
     onChangeInput,
     onChangeRating,
     onClickEdit,
