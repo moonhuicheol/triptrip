@@ -24,17 +24,6 @@ const CREATE_BOARD = gql`
   }
 `;
 
-const FETCH_BOARDS = gql`
-  query fetchBoards($page: Int, $search: String) {
-    fetchBoards(page: $page, search: $search) {
-      _id
-      title
-      writer
-      createdAt
-    }
-  }
-`;
-
 const UPDATE_BOARD = gql`
   mutation updateBoard(
     $boardId: ID!
@@ -62,4 +51,4 @@ const UPLOAD_FILE = gql`
   }
 `;
 
-export { CREATE_BOARD, FETCH_BOARDS, UPDATE_BOARD, UPLOAD_FILE };
+export { CREATE_BOARD, UPDATE_BOARD, UPLOAD_FILE };

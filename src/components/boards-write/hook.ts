@@ -175,23 +175,23 @@ export default function useBoardNew(props) {
     router.push(`/boards/${params.boardId}`);
   };
 
-  useEffect(() => {
-    if (props.isEdit && data) {
-      setInput({
-        writer: data.fetchBoard.writer || "",
-        password: "",
-        title: data.fetchBoard.title || "",
-        contents: data.fetchBoard.contents || "",
-      });
+  // useEffect(() => {
+  //   if (props.isEdit && data) {
+  //     setInput({
+  //       writer: data.fetchBoard.writer || "",
+  //       password: "",
+  //       title: data.fetchBoard.title || "",
+  //       contents: data.fetchBoard.contents || "",
+  //     });
 
-      setErrorMessage({
-        writer: "hidden",
-        password: "visible",
-        title: "hidden",
-        contents: "hidden",
-      });
-    }
-  }, [props.isEdit, data]);
+  //     setErrorMessage({
+  //       writer: "hidden",
+  //       password: "visible",
+  //       title: "hidden",
+  //       contents: "hidden",
+  //     });
+  //   }
+  // }, [props.isEdit, data]);
 
   const handleOk = () => {
     setIsModalOpen(false);

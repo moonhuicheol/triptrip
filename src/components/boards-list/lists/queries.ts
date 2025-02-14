@@ -4,9 +4,24 @@ const FETCH_BOARDS = gql`
   query fetchBoards($page: Int, $search: String) {
     fetchBoards(page: $page, search: $search) {
       _id
-      title
       writer
+      title
+      contents
+      youtubeUrl
+      likeCount
+      dislikeCount
+      images
+      boardAddress {
+        zipcode
+        address
+        addressDetail
+        _id
+      }
       createdAt
+      user {
+        picture
+        deletedAt
+      }
     }
   }
 `;

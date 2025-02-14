@@ -4,13 +4,15 @@ import useBoards from "./hook";
 import PageButton from "../pagination";
 import List from "../list";
 import { BoardsProps } from "./types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useApolloClient } from "@apollo/client";
 import { FetchBoardDocument } from "@/common/gql/graphql";
 import _ from "lodash";
+import useBoardNew from "@/components/boards-write/hook";
 
 export default function Boards({ data, refetch }: BoardsProps) {
   const { currentPage, boardsCount, setCurrentPage } = useBoards({ data });
+  const { imgUrl } = useBoardNew();
   const [test, setTest] = useState("테스트 제목");
   const onClickTest = () => {
     setTest("제목 변경");
@@ -28,6 +30,12 @@ export default function Boards({ data, refetch }: BoardsProps) {
   const prefetchBoard = (boardId: string) => async () => {
     prefetchBoardDebounce(boardId);
   };
+
+  // useEffect(() => {
+  //   const img = new Image();
+  //   img.src = {`https://storage.googleapis.com/${data?.fetchBoards.images[0]}`}
+
+  // }, []);
 
   return (
     <div className="w-[1280px] mx-auto min-w-[680px] px-12 py-6 rounded-2xl shadow-[0px_0px_20px_0px_#00000014] mb-[100px]">

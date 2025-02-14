@@ -6,6 +6,7 @@ import { FixedSizeList as Scroll } from "react-window";
 export default function CommentList() {
   const { data, hasMore, onNext } = useCommentList();
   const outerDiv = (props) => <div id="scrollId" {...props} />;
+  console.log(data?.fetchBoardComments.length, "길이");
   return (
     <div className="w-[1280px] mx-auto">
       {data?.fetchBoardComments.length > 0 ? (
@@ -16,15 +17,15 @@ export default function CommentList() {
           loader=""
         >
           <Scroll
-            height={500}
+            height={900}
             width={"100%"}
             itemSize={90}
             itemData={data?.fetchBoardComments}
             itemCount={data?.fetchBoardComments.length}
             outerElementType={outerDiv}
           >
-            {({ index, data }) => (
-              <div className="flex flex-col gap-10">
+            {({ index, data, style }) => (
+              <div style={style}>
                 <CommentListItem el={data[index]} key={data[index]._id} />
               </div>
             )}
