@@ -10,9 +10,11 @@ import { FetchBoardDocument } from "@/common/gql/graphql";
 import _ from "lodash";
 import useBoardNew from "@/components/boards-write/hook";
 
+const preloadImg = [];
+
 export default function Boards({ data, refetch }: BoardsProps) {
   const { currentPage, boardsCount, setCurrentPage } = useBoards({ data });
-  const { imgUrl } = useBoardNew();
+  console.log(data, "데이타");
   const [test, setTest] = useState("테스트 제목");
   const onClickTest = () => {
     setTest("제목 변경");
@@ -20,22 +22,18 @@ export default function Boards({ data, refetch }: BoardsProps) {
 
   const client = useApolloClient();
 
-  const prefetchBoardDebounce = _.debounce((boardId) => {
+  const prefetchBoardDebounce = _.debounce((boardId, imgUrl) => {
     client.query({
       query: FetchBoardDocument,
       variables: { boardId },
     });
+    const img = new Image();
+    img.src = `https://storage.googleapis.com/${imgUrl}`;
   }, 200);
 
-  const prefetchBoard = (boardId: string) => async () => {
-    prefetchBoardDebounce(boardId);
+  const prefetchBoard = (boardId: string, imgUrl: string) => async () => {
+    prefetchBoardDebounce(boardId, imgUrl);
   };
-
-  // useEffect(() => {
-  //   const img = new Image();
-  //   img.src = {`https://storage.googleapis.com/${data?.fetchBoards.images[0]}`}
-
-  // }, []);
 
   return (
     <div className="w-[1280px] mx-auto min-w-[680px] px-12 py-6 rounded-2xl shadow-[0px_0px_20px_0px_#00000014] mb-[100px]">
@@ -60,7 +58,11 @@ export default function Boards({ data, refetch }: BoardsProps) {
         </div>
         {data?.fetchBoards.map((el, index) => (
           <React.Fragment key={el._id}>
-            <List el={el} index={index} onMouseOver={prefetchBoard(el._id)} />
+            <List
+              el={el}
+              index={index}
+              onMouseOver={prefetchBoard(el._id, el.images?.[0] ?? "")}
+            />
           </React.Fragment>
         ))}
         <PageButton
