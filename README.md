@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+여행 스토리 공유 및 여행 숙소 예약 플랫폼
 
-## Getting Started
+깃허브
 
-First, run the development server:
+기술스택
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+React, Next.js, Tailwind, TypeScript, GraphQL, Apollo-Client, Zustand, react-hook-form, zod
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+트러블 슈팅 및 최적화 내용
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+불필요한 리렌더링 방지
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+회원가입, 로그인 및 게시글 작성 등 텍스트를 입력하는 요소에 react-hook-form을 이용하여 리렌더링 방지했습니다.
 
-## Learn More
+여러 컴포넌트들 사이에서 특정 컴포넌트 외 다른 컴포넌트들의 리렌더링을 방지하기 위해 memo를 사용했습니다.
 
-To learn more about Next.js, take a look at the following resources:
+이미지 미리보기 개선
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+이미지를 등록하고, 이미지를 미리보기 할 때 이미지를 서버에 등록하고, 주소를 받아와야하는 과정의 시간이 길어 사용자 경험이 좋지 않은 문제 발생
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+임시 이미지 주소를 만들어 미리보기를 우선적으로 실행 후 이미지를 서버에 등록하고, 주소를 받아오게 했습니다.
 
-## Deploy on Vercel
+결과적으로 기존시간 = 3.36s (3360ms) // 개선된 시간 = 5ms => 약 99.85% 최적화
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+리패치(refetch) 성능 개선
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+게시글을 등록/삭제 이후 refetch를 통해 목록을 업데이트를 해서 서버에 기본적으로 두 번의 요청을 보냈습니다.
+
+cache-state를 직접적으로 업데이트하여 서버에 부하를 줄이고 두번의 요청을 한번으로 줄였습니다.
+
+좋아요 성능 개선(옵티미스틱-UI)
+
+좋아요를 누르게 되면 api요청이 되고, 백엔드 서버에서는 DB에 요청하여 좋아요 수를 올리고, 올린 좋아요 수를 다시 응답합니다. 이렇게 되면 느린환경의 컴퓨터에서는 해당 과정이 굉장히 느려 유저에게 좋은 경험을 줄 수 가 없다고 생각했습니다.
+
+cache-state에 접근해서 좋아요 수를 업데이트하고, 좋아요 요청이 서버에 도달하기전에 업데이트한 좋아요 수를 화면에빠르게 보여 주어 사용자 경험을 향상 시켰습니다.
+
+좋아요 수를 받아오기까지 두번의 api 요청이 필요하고, 총 37ms의 시간의 걸린 후에 업데이트된 좋아요 수가 보이지만 성능개선을 통해 19ms가 걸리는 하나의 api요청을 보내자마자 업데이트 된 좋아요 수를 보여 줄 수 있게 되었습니다.
+
+데이터 조회 성능 개선
+
+해당 게시글 제목에 마우스를 hover했을 시
+
+prefetch를 하여 데이터를 미리 받아놓은 후 사용자가 게시글을 클릭하고 이동 후에 보다 빠른 데이터를 조회할 수 있게하여 사용자 경험을 향상 시켰습니다.
+
+또한 일반 텍스트보다 용량이 큰 이미지를 preload하여 마찬가지로 사용자가 해당 게시글로 이동할 때 Layout Shift 현상을 방지하여 사용자 경험을 향상 시켰습니다.
+
+무한스크롤 성능 개선
+
+데이터가 많은 페이지에서 렌더링 성능이 떨어져 스크롤이 부드럽지 않게 되는 문제가 있습니다. 이 성능 저하 문제를 해결
+
+하기 위해 윈도잉 기법을 도입하여 한 번에 전체 리스트를 모두 렌더링하지 않고, 현재 보이는 영역(뷰포트)에 맞는 데이터만 렌더링하여 무한스크롤 성능을 개선하였습니다.
+
