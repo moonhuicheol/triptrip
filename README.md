@@ -1,10 +1,10 @@
 
-## 프로젝트명
+## :pushpin: 프로젝트명 
+## TripTrip
 
->**HelloTutor**
 > 여행을 좋아하는 유저
 >
-> 여행 경험을 나누고 얘기할 수 있는 커뮤니케이션
+> 여행 경험을 얘기하고 나눌 수 있는 커뮤니케이션
 >
 > 여행숙소 예약 플랫폼
 
@@ -14,9 +14,7 @@ React, Next.js, Tailwind, TypeScript, GraphQL, Apollo-Client, Zustand, react-hoo
 ## :pushpin: 프로젝트 내용 
 
 ### 1. 로그인
-- JWT를 이용한 로그인
-- passport를 이용하여 OAuth2를 구현(구글 로그인)
-
+- r
 ### 2. 게시판
 **자유게시판, 질문하기게시판**
 - 페이지 네이션, 검색, sort, 이미지 업로드, 좋아요, 댓글
