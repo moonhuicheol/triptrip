@@ -28,11 +28,11 @@
 
 
 ## 📺 화면구성
-<img src = https://github.com/user-attachments/assets/0be7b2db-8a12-426a-af1c-84b5774deb68 with="350" height="300" />
-<img src = https://github.com/user-attachments/assets/75c3eb49-bccf-4c24-8801-a12412ee3cb1 with="500" height="300" />
-<img src = https://github.com/user-attachments/assets/c867f3ba-ecc2-42e5-8236-364039f81f65 with="500" height="300" />
-<img src = https://github.com/user-attachments/assets/a90070e8-a936-4194-b4dc-13d9651bb8ac with="500" height="300" />
-<img src = https://github.com/user-attachments/assets/497666b9-ffaa-43f0-a05f-8bd107e66f5b with="500" height="300" />
+<img src = https://github.com/user-attachments/assets/0be7b2db-8a12-426a-af1c-84b5774deb68 with="300" height="300" />
+<img src = https://github.com/user-attachments/assets/75c3eb49-bccf-4c24-8801-a12412ee3cb1 with="300" height="300" />
+<img src = https://github.com/user-attachments/assets/c867f3ba-ecc2-42e5-8236-364039f81f65 with="300" height="300" />
+<img src = https://github.com/user-attachments/assets/a90070e8-a936-4194-b4dc-13d9651bb8ac with="300" height="300" />
+<img src = https://github.com/user-attachments/assets/497666b9-ffaa-43f0-a05f-8bd107e66f5b with="300" height="300" />
 
 
 ## 🎮 주요기능
