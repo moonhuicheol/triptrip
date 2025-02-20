@@ -73,8 +73,8 @@
     임시 이미지 주소를 만들어 미리보기를 우선적으로 실행 후 이미지를 서버에 등록하고, 주소를 받아오게 했습니다.
 
     결과적으로 기존시간 = 3.36s (3360ms) // 개선된 시간 = 5ms => 약 99.85% 최적화
-<img src = https://github.com/user-attachments/assets/5933b79f-aa9c-4985-888d-cf79e8bbd358 with="300" height="300"/>
-<img src = https://github.com/user-attachments/assets/37c5998a-adf0-4732-b585-6632be49d20c with="300" height="300"/>
+<img src = https://github.com/user-attachments/assets/5933b79f-aa9c-4985-888d-cf79e8bbd358 with="230" height="230"/>
+<img src = https://github.com/user-attachments/assets/37c5998a-adf0-4732-b585-6632be49d20c with="230" height="230"/>
 
 
 ### 3.리패치(refetch) 성능 개선
@@ -90,8 +90,8 @@
     cache-state에 접근해서 좋아요 수를 업데이트하고, 좋아요 요청이 서버에 도달하기전에 업데이트한 좋아요 수를 화면에빠르게 보여 주어 사용자 경험을 향상 시켰습니다.
 
     좋아요 수를 받아오기까지 두번의 api 요청이 필요하고, 총 37ms의 시간의 걸린 후에 업데이트된 좋아요 수가 보이지만 성능개선을 통해 19ms가 걸리는 하나의 api요청을 보내자마자 업데이트 된 좋아요 수를 보여 줄 수 있게 되었습니다.
-<img src = https://github.com/user-attachments/assets/6ebc88cd-673a-4b1a-a637-bcc5d3cc4d57 with="280" height="280"/>
-<img src = https://github.com/user-attachments/assets/a8aad70b-1327-4600-9599-3e4e166f3911 with="280" height="280"/>
+<img src = https://github.com/user-attachments/assets/6ebc88cd-673a-4b1a-a637-bcc5d3cc4d57 with="230" height="230"/>
+<img src = https://github.com/user-attachments/assets/a8aad70b-1327-4600-9599-3e4e166f3911 with="230" height="230"/>
 
 
 ### 5.데이터 조회 성능 개선
