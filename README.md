@@ -16,12 +16,20 @@
  -    Node.js 23.2.0
  -    Yarn 1.22.22
 
-**Installation**
+**Installation & start**
 ```
-    $ git clone 
+    $ git clone https://github.com/moonhuicheol/triptrip.git
+    $ yarn install
+    $ yarn dev
 ```
 
-### 1. 로그인
+## 📚기술스택
+<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"><img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=next.js&logoColor=white"><img src="https://img.shields.io/badge/tailwind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"><img src="https://img.shields.io/badge/Typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"><img src="https://img.shields.io/badge/GraphQL-E10098?style=for-the-badge&logo=GraphQL&logoColor=white"><img src="https://img.shields.io/badge/ApolloClient-311C87?style=for-the-badge&logo=apollographql&logoColor=white"><img src="https://img.shields.io/badge/reacthookform-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white"><img src="https://img.shields.io/badge/zod-3E67B1?style=for-the-badge&logo=Zod&logoColor=white"><img src="https://img.shields.io/badge/zustand-F36D00?style=for-the-badge&logo=zustand&logoColor=white">
+
+
+
+
+
 
 ### 2. 게시판
 **자유게시판, 질문하기게시판**
