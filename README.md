@@ -61,8 +61,8 @@
     회원가입, 로그인 및 게시글 작성 등 텍스트를 입력하는 요소에 react-hook-form을 이용하여 리렌더링 방지했습니다.
 
     여러 컴포넌트들 사이에서 특정 컴포넌트 외 다른 컴포넌트들의 리렌더링을 방지하기 위해 memo를 사용했습니다.
-<img src = https://github.com/user-attachments/assets/dbbd46c6-730d-453e-a802-e0fa940a6ddf with="200" height="200"/>
-<img src = https://github.com/user-attachments/assets/409306e7-e6d2-4db1-9c11-8b32eca8bf2f with="200" height="200"/>
+<img src = https://github.com/user-attachments/assets/dbbd46c6-730d-453e-a802-e0fa940a6ddf with="230" height="230"/>
+<img src = https://github.com/user-attachments/assets/409306e7-e6d2-4db1-9c11-8b32eca8bf2f with="230" height="230"/>
 
 
 
