@@ -6,9 +6,14 @@ import { LoginSchema } from "./schema";
 import FormInput from "@/common/ui/input";
 
 import useLogin from "./hook";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const { methods, onClickSubmit } = useLogin();
+  const router = useRouter();
+  const onClickButton = () => {
+    router.push("/signup");
+  };
 
   return (
     <FormProvider {...methods}>
@@ -65,9 +70,13 @@ export default function Login() {
             >
               로그인
             </button>
-            <div className="font-normal text-[14px] leading-5 text-[#333333]">
+            <button
+              className="font-normal text-[14px] leading-5 text-[#333333]"
+              type="button"
+              onClick={onClickButton}
+            >
               회원가입
-            </div>
+            </button>
           </div>
         </div>
       </form>

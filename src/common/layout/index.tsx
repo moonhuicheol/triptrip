@@ -7,7 +7,10 @@ import Navigation from "./navigation";
 export default function Layout({ children }) {
   const path = usePathname();
   const bannerSwitch =
-    path.includes("new") || path.includes("edit") || path.includes("login");
+    path.includes("new") ||
+    path.includes("edit") ||
+    path.includes("login") ||
+    path.includes("signup");
   return (
     <div>
       {!bannerSwitch && (
