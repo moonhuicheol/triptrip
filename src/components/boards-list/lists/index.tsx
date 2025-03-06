@@ -14,12 +14,6 @@ const preloadImg = [];
 
 export default function Boards({ data, refetch }: BoardsProps) {
   const { currentPage, boardsCount, setCurrentPage } = useBoards({ data });
-  console.log(data, "데이타");
-  const [test, setTest] = useState("테스트 제목");
-  const onClickTest = () => {
-    setTest("제목 변경");
-  };
-
   const client = useApolloClient();
 
   const prefetchBoardDebounce = _.debounce((boardId, imgUrl) => {
@@ -51,10 +45,6 @@ export default function Boards({ data, refetch }: BoardsProps) {
           <div className="w-[100px] font-medium text-4 leading-5 text-[#1c1c1c] text-center">
             날짜
           </div>
-        </div>
-        <button onClick={onClickTest}>memo테스트</button>
-        <div className="flex items-center w-full py-3 pl-6 pr-0 gap-2 border border-solid border-[#F2F2F2] group cursor-pointer">
-          {test}
         </div>
         {data?.fetchBoards.map((el, index) => (
           <React.Fragment key={el._id}>
