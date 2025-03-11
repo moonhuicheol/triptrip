@@ -19,6 +19,7 @@
 **Installation & start**
 ```
     $ git clone https://github.com/moonhuicheol/triptrip.git
+    $ cd triptrip
     $ yarn install
     $ yarn dev
 ```
