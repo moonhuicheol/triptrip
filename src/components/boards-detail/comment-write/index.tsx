@@ -95,7 +95,7 @@ export default function CommentWrite({ isEdit }) {
                 }`}
                 disabled={!methods.formState.isValid}
               >
-                댓글등록
+                {isEdit ? "수정하기" : "댓글등록"}
               </button>
             </div>
           </form>

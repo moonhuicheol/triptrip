@@ -13,7 +13,7 @@ import {
 } from "@/common/gql/graphql";
 import { IBoardWriteSchema } from "./schema";
 
-export default function useBoardNew(props) {
+export default function useBoardNew() {
   const params = useParams();
   const { data } = useQuery(FetchBoardDocument, {
     variables: {

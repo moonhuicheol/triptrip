@@ -23,13 +23,21 @@ export default function BoardNew(props) {
     onClickImage,
     onClickSubmit,
     fileRef,
-    imgUrl,
     temporaryUrl,
   } = useBoardNew(props);
 
   const methods = useForm<IBoardWriteSchema>({
     resolver: zodResolver(schema),
     mode: "onChange",
+    defaultValues: props.isEdit
+      ? {
+          writer: data?.fetchBoard.writer,
+          password: "",
+          title: data?.fetchBoard.contents,
+          youtubeUrl: data?.fetchBoard.youtubeUrl,
+          boardAddress: data?.fetchBoard.boardAddress,
+        }
+      : {},
   });
 
   return (
