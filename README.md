@@ -8,6 +8,7 @@
 >
 > 여행숙소 예약 플랫폼
 
+
 ## 📆 개발기간
 2024년 10월 ~ 진행중
 
@@ -19,6 +20,7 @@
 **Installation & start**
 ```
     $ git clone https://github.com/moonhuicheol/triptrip.git
+    $ cd triptrip
     $ yarn install
     $ yarn dev
 ```
@@ -52,7 +54,7 @@
 ### ⭐ 댓글
     댓글 CRUD
     별점 작성기능
-    
+
 
 ## 🛠 트러블 슈팅 및 최적화 내용
 
