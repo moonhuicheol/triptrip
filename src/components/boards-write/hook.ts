@@ -2,7 +2,7 @@
 
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { useParams, useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { Address } from "react-daum-postcode";
 import {
   CreateBoardDocument,
@@ -13,7 +13,7 @@ import {
 } from "@/common/gql/graphql";
 import { IBoardWriteSchema } from "./schema";
 
-export default function useBoardNew() {
+export default function useBoardNew(props) {
   const params = useParams();
   const { data } = useQuery(FetchBoardDocument, {
     variables: {
@@ -79,27 +79,51 @@ export default function useBoardNew() {
 
   const onClickSubmit = async (data: IBoardWriteSchema) => {
     console.log(data, "data확인");
-    try {
-      const result = await createBoard({
-        variables: {
-          createBoardInput: {
-            writer: data.writer,
+    if (props.isEdit) {
+      try {
+        await updateBoard({
+          variables: {
+            boardId: String(params.boardId),
             password: data.password,
-            contents: data.contents,
-            youtubeUrl: data.youtubeUrl,
-            title: data.title,
-            boardAddress: {
-              ...juso,
+            updateBoardInput: {
+              title: data.title,
+              contents: data.contents,
+              youtubeUrl: data.youtubeUrl,
+              boardAddress: {
+                ...juso,
+              },
+              images: imgUrl,
             },
-            images: imgUrl,
           },
-        },
-        refetchQueries: [{ query: FetchBoardsDocument }],
-      });
-      console.log("게시글 작성 결가", result);
-      router.push(`/boards/${result.data?.createBoard._id}`);
-    } catch (e) {
-      console.log("에러메시지", e);
+          refetchQueries: [{ query: FetchBoardDocument }],
+        });
+        router.push(`/boards/${params.boardId}`);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const result = await createBoard({
+          variables: {
+            createBoardInput: {
+              writer: data.writer,
+              password: data.password,
+              contents: data.contents,
+              youtubeUrl: data.youtubeUrl,
+              title: data.title,
+              boardAddress: {
+                ...juso,
+              },
+              images: imgUrl,
+            },
+          },
+          refetchQueries: [{ query: FetchBoardsDocument }],
+        });
+        console.log("게시글 작성 결가", result);
+        router.push(`/boards/${result.data?.createBoard._id}`);
+      } catch (e) {
+        console.log("에러메시지", e);
+      }
     }
   };
   // const onClickRegister = async () => {
