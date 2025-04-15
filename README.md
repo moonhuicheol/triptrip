@@ -67,7 +67,6 @@
 <img src = https://github.com/user-attachments/assets/409306e7-e6d2-4db1-9c11-8b32eca8bf2f with="230" height="230"/>
 
 
-
 ### 2.이미지 미리보기 개선
 
     이미지를 등록하고, 이미지를 미리보기 할 때 이미지를 서버에 등록하고, 주소를 받아와야하는 과정의 시간이 길어 사용자 경험이 좋지 않은 문제 발생
