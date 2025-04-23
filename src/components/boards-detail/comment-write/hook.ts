@@ -11,7 +11,7 @@ import {
 } from "@/common/gql/graphql";
 import { CreateBoardCommentInputSchema } from "./schema";
 
-export default function useCommentWrite() {
+export default function useCommentWrite(isEdit, commentId) {
   const params = useParams();
   const [rating, setRating] = useState(3);
 
@@ -19,54 +19,80 @@ export default function useCommentWrite() {
   const [updateBoardComment] = useMutation(UpdateBoardCommentDocument);
 
   const onClickSubmit = async (data: CreateBoardCommentInputSchema) => {
-    const result = await createBoardComment({
-      variables: {
-        createBoardCommentInput: {
-          writer: data.writer,
-          password: data.password,
-          contents: data.contents,
-          rating,
-        },
-        boardId: String(params.boardId),
-      },
-      refetchQueries: [
-        {
-          query: FetchBoardCommentsDocument,
-          variables: { boardId: params.boardId },
-        },
-      ],
-    });
-
-    console.log("result", result);
-  };
-
-  const onClickEdit = async (commentId) => {
-    await updateBoardComment({
-      variables: {
-        updateBoardCommentInput: {
-          contents: comment.contents,
-          rating: comment.rating,
-        },
-        password: comment.password,
-        boardCommentId: commentId,
-      },
-      refetchQueries: [
-        {
-          query: FETCH_BOARD_COMMENTS,
+    if (isEdit) {
+      try {
+        updateBoardComment({
           variables: {
-            boardId: params.boardId,
+            updateBoardCommentInput: {
+              contents: data.contents,
+              rating: rating,
+            },
+            password: data.password,
+            boardCommentId: commentId,
           },
-        },
-      ],
-    });
-    // onCancelEdit();
-    // setIsEdit(false);
+          refetchQueries: [
+            {
+              query: FETCH_BOARD_COMMENTS,
+              variables: {
+                boardId: params.boardId,
+              },
+            },
+          ],
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        await createBoardComment({
+          variables: {
+            createBoardCommentInput: {
+              writer: data.writer,
+              password: data.password,
+              contents: data.contents,
+              rating,
+            },
+            boardId: String(params.boardId),
+          },
+          refetchQueries: [
+            {
+              query: FetchBoardCommentsDocument,
+              variables: { boardId: params.boardId },
+            },
+          ],
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
+
+  // const onClickEdit = async (commentId) => {
+  //   await updateBoardComment({
+  //     variables: {
+  //       updateBoardCommentInput: {
+  //         contents: comment.contents,
+  //         rating: comment.rating,
+  //       },
+  //       password: comment.password,
+  //       boardCommentId: commentId,
+  //     },
+  //     refetchQueries: [
+  //       {
+  //         query: FETCH_BOARD_COMMENTS,
+  //         variables: {
+  //           boardId: params.boardId,
+  //         },
+  //       },
+  //     ],
+  //   });
+  //   // onCancelEdit();
+  //   // setIsEdit(false);
+  // };
 
   return {
     onClickSubmit,
     rating,
     setRating,
-    onClickEdit,
   };
 }

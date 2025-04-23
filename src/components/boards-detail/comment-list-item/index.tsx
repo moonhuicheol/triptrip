@@ -84,12 +84,7 @@ export default function CommentListItem({ el }) {
           </div>
         </div>
       ) : (
-        <CommentWrite
-          key={el._id}
-          el={el}
-          isEdit={isEdit}
-          setIsEdit={setIsEdit}
-        />
+        <CommentWrite key={el._id} commentId={el._id} isEdit={isEdit} />
       )}
     </>
   );

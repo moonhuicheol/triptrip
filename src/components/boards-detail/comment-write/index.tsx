@@ -9,8 +9,11 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateBoardCommentInputSchema, schema } from "./schema";
 
-export default function CommentWrite({ isEdit }) {
-  const { setRating, rating, onClickSubmit } = useCommentWrite();
+export default function CommentWrite({ isEdit, commentId }) {
+  const { setRating, rating, onClickSubmit } = useCommentWrite(
+    isEdit,
+    commentId
+  );
 
   const methods = useForm<CreateBoardCommentInputSchema>({
     resolver: zodResolver(schema),
