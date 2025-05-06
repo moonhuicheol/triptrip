@@ -2,7 +2,7 @@ import { FormOutlined, SearchOutlined } from "@ant-design/icons";
 import useSearch from "./hook";
 
 export default function Search({ data, refetch }) {
-  const { onChangeSearch } = useSearch({ data, refetch });
+  const { onChangeSearch, onClickRegister } = useSearch({ data, refetch });
 
   return (
     <div className="flex flex-col gap-6 w-[1280px] mx-auto mb-10">
@@ -24,7 +24,10 @@ export default function Search({ data, refetch }) {
         </div>
         <div className="flex py-3 px-4 gap-2 rounded-lg h-12 bg-[#2974e5] whitespace-nowrap">
           <FormOutlined className="text-[#ffffff]" />
-          <div className="font-semibold text-[#ffffff] text-[16px] leading-6 -tracking-widest">
+          <div
+            className="font-semibold text-[#ffffff] text-[16px] leading-6 -tracking-widest hover:cursor-pointer"
+            onClick={onClickRegister}
+          >
             트립토크 등록
           </div>
         </div>
